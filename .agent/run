@@ -1,0 +1,46 @@
+#!/bin/bash
+# PARA 메모 자동화 에이전트 실행 스크립트
+# Path-parameterized wrapper for the main controller
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BIN_DIR="$SCRIPT_DIR/bin"
+
+# Check if virtual environment exists and activate it
+VENV_DIR="$SCRIPT_DIR/venv"
+if [ -d "$VENV_DIR" ]; then
+    source "$VENV_DIR/bin/activate"
+fi
+
+# Convert relative path to absolute path before changing directory
+if [ $# -gt 0 ]; then
+    # Convert first argument (vault_path) to absolute path if it exists
+    FIRST_ARG="$1"
+    shift  # Remove first argument from $@
+
+    # Check if realpath command is available, otherwise use fallback
+    if command -v realpath >/dev/null 2>&1; then
+        # Use realpath if available (most reliable)
+        ABS_VAULT_PATH="$(realpath "$FIRST_ARG")"
+    else
+        # Fallback: use cd and pwd for absolute path conversion
+        if [ -d "$FIRST_ARG" ] || [ -f "$FIRST_ARG" ]; then
+            ABS_VAULT_PATH="$(cd "$(dirname "$FIRST_ARG")" && pwd)/$(basename "$FIRST_ARG")"
+            # If it's a directory, just cd to it
+            if [ -d "$FIRST_ARG" ]; then
+                ABS_VAULT_PATH="$(cd "$FIRST_ARG" && pwd)"
+            fi
+        else
+            # If path doesn't exist, just use it as-is (let the Python script handle the error)
+            ABS_VAULT_PATH="$FIRST_ARG"
+        fi
+    fi
+
+    # Run the main controller with absolute vault path and remaining arguments
+    cd "$BIN_DIR"
+    python3 main_controller.py "$ABS_VAULT_PATH" "$@"
+else
+    # No arguments provided, run as-is (will show help)
+    cd "$BIN_DIR"
+    python3 main_controller.py
+fi

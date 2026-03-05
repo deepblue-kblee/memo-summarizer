@@ -1,0 +1,35 @@
+# Python
+**/__pycache__/
+MANIFEST
+
+# Virtual Environments
+.agent/venv/
+
+# Logs and temporary files
+**/logs/
+
+# Config files are included (system configuration)
+!.agent/config/
+
+# macOS
+.DS_Store
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment variables (contains sensitive info)
+.env
+
+# Obsidian
+.obsidian/
+
+# Etc
+_backup/
+
+# Claude Code CLI
+.claude/
+
+# Document directory
+00_INBOX/
+01_AGENDAS/
+02_DAILY_REPORTS/

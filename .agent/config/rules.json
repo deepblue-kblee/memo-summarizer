@@ -1,0 +1,22 @@
+{
+  "para_classification": {
+    "projects": {
+      "folder": "01_AGENDAS/Projects",
+      "keywords": ["~까지", "기한", "데드라인", "출시", "완료", "완결", "개발", "셋업", "구축", "이전", "배포", "확정", "제출", "런칭", "오픈", "(P)"],
+      "description": "명확한 마감이나 목표가 있는 프로젝트성 주제"
+    },
+    "areas": {
+      "folder": "01_AGENDAS/Areas",
+      "keywords": ["정기", "관리", "운영", "매달", "지속", "팔로업", "루틴", "1on1", "미팅", "가이드", "정책", "피드백", "공유", "현황", "협의", "(A)"],
+      "description": "지속적인 업데이트가 필요한 책임 영역 및 루틴"
+    }
+  },
+  "task_extraction": {
+    "action_suffixes": ["해야 함", "하기", "할 것", "확인", "조사", "요청", "문의", "셋업", "배포"],
+    "indicators": ["- [ ]", "- "]
+  },
+  "priority_flags": {
+    "(P)": "Projects",
+    "(A)": "Areas"
+  }
+}

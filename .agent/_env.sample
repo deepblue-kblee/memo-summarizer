@@ -1,0 +1,11 @@
+# Anthropic API 설정 (Not used yet)
+ANTHROPIC_API_KEY=your_api_key_here
+
+# 처리 스케줄 (24시간 형식)
+PROCESS_TIME=09:00
+
+# 최소 처리 간격 (분, 0=OFF)
+MIN_PROCESS_INTERVAL=0
+
+# 로그 레벨 (DEBUG, INFO, WARNING, ERROR)
+LOG_LEVEL=INFO
