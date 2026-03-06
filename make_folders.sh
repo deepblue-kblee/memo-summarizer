@@ -2,6 +2,7 @@
 
 # 생성할 디렉터리 목록 정의
 folders=(
+    "00_INBOX/_ARCHIVED"
     "01_AGENDAS/Areas"
     "01_AGENDAS/Projects"
     "02_DAILY_REPORTS"
