@@ -1,4 +1,4 @@
-# 📋 TODO - Multi-AI Memo Automation Agent
+# 📋 PROJECT STATUS - Multi-AI Memo Automation Agent
 
 > **작업 연속성을 위한 컨텍스트 유지 문서** - 에이전트 및 새 세션에서 즉시 작업을 이어갈 수 있도록 현재 상태와 다음 단계를 정리
 
@@ -123,7 +123,7 @@
 ├── AI_QUICK_START.md      # 🔄 AI 비교 및 선택 가이드 (277줄)
 ├── README.md              # 📖 프로젝트 소개 (299줄) [업데이트 필요]
 ├── DEVELOPER.md           # 🧑‍💻 개발자 가이드 (501줄) [처리 대기]
-└── TODO.md               # 📋 작업 컨텍스트 (이 파일)
+└── PROJECT_STATUS.md     # 📋 작업 컨텍스트 (이 파일)
 ```
 
 ### **🤖 시스템 파일들**
@@ -224,7 +224,7 @@ gemini --version
 ```
 
 ### **우선 읽어야 할 문서 순서**
-1. **TODO.md** (이 파일) - 전체 컨텍스트 파악
+1. **PROJECT_STATUS.md** (이 파일) - 전체 컨텍스트 파악
 2. **SYSTEM.md** - 시스템 아키텍처 이해
 3. **AI_QUICK_START.md** - AI 특성 및 선택 가이드
 4. **CLAUDE.md / GEMINI.md** - 필요한 AI별 상세 가이드
