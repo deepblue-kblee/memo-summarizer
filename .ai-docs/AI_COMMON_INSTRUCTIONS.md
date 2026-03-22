@@ -17,10 +17,6 @@
    - 전체 시스템 아키텍처 및 PARA 분류 규칙
    - 확장 및 개발 가이드
 
-3. **🔄 [AI_QUICK_START.md](AI_QUICK_START.md)** (AI 선택/비교 필요시)
-   - Multi-AI 환경에서의 AI 선택 가이드
-   - Claude vs Gemini 특성 비교
-
 ### ✅ **시작 체크리스트**
 - [ ] **PROJECT_STATUS.md 읽고 현재 상태 파악**
 - [ ] **다음 우선순위 작업 확인** (Priority 1, 2, 3 순서)

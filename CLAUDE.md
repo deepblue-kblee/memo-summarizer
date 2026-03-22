@@ -237,7 +237,6 @@ Claude integrates seamlessly with the common system components:
 
 > 📚 **Additional Resources**:
 > - **System Architecture**: [SYSTEM.md](.ai-docs/SYSTEM.md) - Complete system overview
-> - **AI Comparison**: [AI_QUICK_START.md](.ai-docs/AI_QUICK_START.md) - When to use Claude vs other AIs
 > - **Project Status**: [PROJECT_STATUS.md](.ai-docs/PROJECT_STATUS.md) - Current work context
 
 > 💡 **Claude Best Practices**:

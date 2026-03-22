@@ -243,7 +243,6 @@ Gemini는 공통 시스템 구성요소와 완벽하게 통합됩니다:
 
 > 📚 **추가 자료**:
 > - **시스템 아키텍처**: [SYSTEM.md](.ai-docs/SYSTEM.md) - 전체 시스템 개요
-> - **AI 비교**: [AI_QUICK_START.md](.ai-docs/AI_QUICK_START.md) - Claude vs Gemini 선택 가이드
 > - **프로젝트 상태**: [PROJECT_STATUS.md](.ai-docs/PROJECT_STATUS.md) - 현재 작업 컨텍스트
 
 > 💡 **Gemini 모범 사례**:
