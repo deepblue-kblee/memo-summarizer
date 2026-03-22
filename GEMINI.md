@@ -1,6 +1,6 @@
 # 🟡 Gemini 사용 가이드 - 메모 자동화 에이전트
 
-> **📋 기본 시스템 참조**: 전체 시스템 아키텍처, PARA 분류 규칙, 공통 기능은 **[SYSTEM.md](SYSTEM.md)**를 참조하세요
+> **📋 기본 시스템 참조**: 전체 시스템 아키텍처, PARA 분류 규칙, 공통 기능은 **[SYSTEM.md](.ai-docs/SYSTEM.md)**를 참조하세요
 
 ## 🚀 Gemini 특화 개요
 
@@ -235,10 +235,9 @@ Gemini는 공통 시스템 구성요소와 완벽하게 통합됩니다:
 ---
 
 > 📚 **추가 자료**:
-> - **시스템 아키텍처**: [SYSTEM.md](SYSTEM.md) - 전체 시스템 개요
-> - **AI 비교**: [AI_QUICK_START.md](AI_QUICK_START.md) - Claude vs Gemini 선택 가이드
-> - **개발자 상세**: [DEVELOPER.md](DEVELOPER.md) - 구현 세부사항
-> - **모듈 구조**: [ARCHITECTURE.md](ARCHITECTURE.md) - 모듈 아키텍처
+> - **시스템 아키텍처**: [SYSTEM.md](.ai-docs/SYSTEM.md) - 전체 시스템 개요
+> - **AI 비교**: [AI_QUICK_START.md](.ai-docs/AI_QUICK_START.md) - Claude vs Gemini 선택 가이드
+> - **프로젝트 상태**: [PROJECT_STATUS.md](.ai-docs/PROJECT_STATUS.md) - 현재 작업 컨텍스트
 
 > 💡 **Gemini 모범 사례**:
 > - 대량 파일 처리나 비용 최적화가 필요할 때 Gemini 사용
