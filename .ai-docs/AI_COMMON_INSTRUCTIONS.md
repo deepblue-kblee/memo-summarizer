@@ -96,6 +96,35 @@ Git 상태 확인
 - **작업 기록**: PROGRESS.md에서 어떤 AI가 무엇을 했는지 확인
 - **설정 차이**: AI별 특화 설정 고려 (CLAUDE.md vs GEMINI.md)
 
+## 📚 **참고 자료 활용 (.ai-docs/reference/)**
+
+### **Reference 디렉토리 활용 원칙**
+- **목적**: 한 번 조사한 내용을 재조사하지 않고 참고할 수 있는 저장소
+- **성격**: 말 그대로 **참고 자료** (앞으로의 방향 설정용이 아님)
+- **활용**: **제안할 때** 기존 연구 결과를 활용
+
+### **Reference 파일 활용법**
+```bash
+# Reference 디렉토리 내용 확인
+ls .ai-docs/reference/
+
+# 특정 주제 참고 자료 빠른 확인
+grep -l "키워드" .ai-docs/reference/*.md
+```
+
+### **Reference 활용 시나리오**
+- ✅ **제안서 작성 시**: 기존 연구 결과 인용
+- ✅ **기술 선택 시**: 이전 분석 결과 참고
+- ✅ **패턴 적용 시**: 검증된 베스트 프랙티스 활용
+- ❌ **방향 설정**: 참고 자료로 프로젝트 방향 결정하지 말 것
+- ❌ **재조사**: 이미 조사된 내용 중복 조사 금지
+
+### **현재 Reference 파일들**
+- `AI_CONTEXT_MANAGEMENT_RESEARCH.md`: AI 컨텍스트 관리 연구
+- `BEST_PRACTICES.md`: 검증된 베스트 프랙티스
+- `INDEX.md`: 참고 자료 색인
+- `TOOLS_AND_PATTERNS.md`: 도구 및 패턴 정리
+
 ---
 
 ## 🔥 **WARNING - 이 지침을 무시하면:**
