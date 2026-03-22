@@ -8,18 +8,23 @@
 
 ### 📋 **필수 읽기 순서 (MUST READ)**
 
-1. **🎯 [PROJECT_STATUS.md](PROJECT_STATUS.md)** **← 가장 중요**
-   - **현재 프로젝트 상태** 및 다음 우선순위 작업
-   - **Git 상태**, 최근 변경사항, 즉시 진행 가능한 작업
+1. **📈 [PROGRESS.md](PROGRESS.md)** **← 현재 상태 파악**
+   - **완료된 작업들** 및 현재 프로젝트 상태
+   - **Git 상태**, 최근 변경사항, 파일 구조
    - **작업 연속성**: 이전 세션에서 어디까지 진행되었는지 파악
 
-2. **📚 [SYSTEM.md](SYSTEM.md)** (아키텍처 이해 필요시)
+2. **📋 [PLAN.md](PLAN.md)** **← 다음 할 일 확인**
+   - **우선순위별 작업 계획** (Priority 1, 2, 3 순서)
+   - **진행 중인 작업** 및 즉시 진행 가능한 작업
+   - **새 세션 시작 가이드** 및 체크리스트
+
+3. **📚 [SYSTEM.md](SYSTEM.md)** (아키텍처 이해 필요시)
    - 전체 시스템 아키텍처 및 PARA 분류 규칙
    - 확장 및 개발 가이드
 
 ### ✅ **시작 체크리스트**
-- [ ] **PROJECT_STATUS.md 읽고 현재 상태 파악**
-- [ ] **다음 우선순위 작업 확인** (Priority 1, 2, 3 순서)
+- [ ] **PROGRESS.md 읽고 현재 완료 상태 파악**
+- [ ] **PLAN.md 읽고 다음 우선순위 작업 확인** (Priority 1, 2, 3 순서)
 - [ ] **Git 상태 확인**: `git status && git log --oneline -3`
 - [ ] **현재 브랜치 확인** 및 커밋 상태 파악
 - [ ] **진행 중인 작업이 있는지 확인** (🚧 상태)
@@ -30,16 +35,16 @@
 
 ```bash
 # 1. 현재 우선순위 작업 확인
-grep -A 10 "🚀 다음 단계" .ai-docs/PROJECT_STATUS.md
+grep -A 10 "Priority 1" .ai-docs/PLAN.md
 
 # 2. 진행 중인 작업 확인
-grep -A 5 "🚧 진행 중" .ai-docs/PROJECT_STATUS.md
+grep -A 5 "🚧 진행 중" .ai-docs/PLAN.md
 
 # 3. Git 상태 빠른 확인
 git log --oneline -3 && git status --short
 
 # 4. 완료된 작업 확인 (중복 방지)
-grep -A 10 "✅ 완료된 작업" .ai-docs/PROJECT_STATUS.md
+grep -A 10 "✅ 완료된 작업" .ai-docs/PROGRESS.md
 ```
 
 ## 🔄 **AI 작업 시작 플로우**
@@ -49,9 +54,11 @@ AI 가이드 읽기 (CLAUDE.md/GEMINI.md)
     ↓
 이 공통 지침 읽기 ← 현재 위치
     ↓
-PROJECT_STATUS.md 읽기 (필수)
+PROGRESS.md 읽기 (완료 상태 파악)
     ↓
-현재 우선순위 작업 파악
+PLAN.md 읽기 (다음 할 일 확인)
+    ↓
+현재 우선순위 작업 파악 (Priority 1 집중)
     ↓
 필요시 SYSTEM.md 참조 (아키텍처 상세)
     ↓
@@ -81,12 +88,12 @@ Git 상태 확인
 
 ### **이전 작업 컨텍스트 파악**
 1. **최근 커밋 메시지** 확인으로 마지막 작업 내용 파악
-2. **PROJECT_STATUS.md**의 "현재 프로젝트 상태" 섹션 확인
-3. **🚧 진행 중인 작업** 섹션에서 미완료 작업 확인
+2. **PROGRESS.md**의 "완료된 작업들" 섹션으로 기존 성과 확인
+3. **PLAN.md**의 "🚧 진행 중인 작업" 섹션에서 미완료 작업 확인
 
 ### **Multi-AI 환경 고려**
 - **이전 AI**: Claude 또는 Gemini가 이전에 작업했을 수 있음
-- **작업 기록**: PROJECT_STATUS.md에서 어떤 AI가 무엇을 했는지 확인
+- **작업 기록**: PROGRESS.md에서 어떤 AI가 무엇을 했는지 확인
 - **설정 차이**: AI별 특화 설정 고려 (CLAUDE.md vs GEMINI.md)
 
 ---
@@ -109,4 +116,4 @@ Git 상태 확인
 
 > **📋 이 문서를 수정하면 모든 AI 가이드에 자동 적용됩니다**
 >
-> **마지막 업데이트**: 2026-03-22 - 공통 지침 시스템 도입
+> **마지막 업데이트**: 2026-03-23 - PROGRESS.md/PLAN.md 분리 구조로 업데이트
