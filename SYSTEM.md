@@ -295,6 +295,270 @@ ls -la 01_AGENDAS/Projects/ 01_AGENDAS/Areas/ 02_DAILY_REPORTS/
 ./.agent/run $(pwd) --help
 ```
 
+## 🔧 Extension & Development Guide
+
+### 🚀 Adding New AI Providers
+
+Extend the system to support additional AI providers by following this pattern:
+
+```python
+# Extend claude_client.py for new providers
+class OpenAIClient(ClaudeClient):
+    def call_ai_service(self, prompt: str) -> Dict[str, Any]:
+        # OpenAI API implementation
+        response = openai.Completion.create(
+            model="gpt-4",
+            prompt=prompt,
+            temperature=0.1
+        )
+        return {
+            "success": True,
+            "content": response.choices[0].text,
+            "cost": calculate_openai_cost(response.usage),
+            "session_id": f"openai_{uuid.uuid4()}",
+            "raw": response
+        }
+
+class GeminiClient(ClaudeClient):
+    def call_ai_service(self, prompt: str) -> Dict[str, Any]:
+        # Gemini API implementation
+        pass
+```
+
+### 📋 Custom PARA Categories
+
+Add new PARA categories by modifying `.agent/config/rules.json`:
+
+```json
+{
+  "para_classification": {
+    "resources": {
+      "folder": "01_AGENDAS/Resources",
+      "keywords": ["참고", "자료", "링크", "문서", "(R)"],
+      "description": "참조 자료 및 리소스"
+    },
+    "archive": {
+      "folder": "01_AGENDAS/Archive",
+      "keywords": ["완료", "종료", "마감", "보관", "(X)"],
+      "description": "완료된 프로젝트 보관소"
+    }
+  }
+}
+```
+
+### 🔄 Alternative Output Formats
+
+Extend `markdown_processor.py` for different output formats:
+
+```python
+class NotionProcessor(MarkdownProcessor):
+    def generate_notion_page(self, topic: str, tasks: List[str]) -> Dict:
+        return {
+            "object": "page",
+            "properties": {
+                "title": {"title": [{"text": {"content": topic}}]},
+                "tasks": {"rich_text": [{"text": {"content": task}} for task in tasks]}
+            }
+        }
+
+class JiraProcessor(MarkdownProcessor):
+    def create_jira_issue(self, topic: str, tasks: List[str]) -> Dict:
+        return {
+            "summary": topic,
+            "description": "\n".join(f"* {task}" for task in tasks),
+            "issuetype": {"name": "Task"}
+        }
+```
+
+### ⚡ Performance Optimization
+
+#### Caching Strategy
+```python
+from functools import lru_cache
+
+# Cache frequently accessed rules
+@lru_cache(maxsize=1)
+def get_classification_rules() -> dict:
+    return load_rules_json()
+
+# Cache AI responses for identical content
+@lru_cache(maxsize=100)
+def cached_analyze_memo(content_hash: str, content: str) -> Dict[str, Any]:
+    return memo_analyzer.analyze_memo(content)
+```
+
+#### Scalability Considerations
+```python
+# Lazy loading for large vaults
+def get_md_files_generator(vault_path: Path, date_filter: str = None):
+    """Memory-efficient file iteration for large vaults"""
+    for file_path in vault_path.glob("00_INBOX/*.md"):
+        if matches_date_filter(file_path, date_filter):
+            yield file_path
+
+# Batch processing for API efficiency
+def analyze_batch(contents: List[str], batch_size: int = 5) -> List[Dict]:
+    """Process multiple memos in batches to optimize API calls"""
+    results = []
+    for i in range(0, len(contents), batch_size):
+        batch = contents[i:i + batch_size]
+        batch_results = [analyzer.analyze_memo(content) for content in batch]
+        results.extend(batch_results)
+    return results
+```
+
+#### Resource Management
+- **File Locking**: Prevent concurrent access issues with `fcntl` (Unix) or `msvcrt` (Windows)
+- **Memory Monitoring**: Use `psutil` for memory usage tracking in large vault processing
+- **Cleanup**: Automatic removal of temporary files and backup cleanup
+
+### 🧪 Testing Strategy
+
+#### Unit Testing Examples
+```python
+import pytest
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+def test_para_classification():
+    """Test PARA classification accuracy"""
+    analyzer = MemoAnalyzer()
+
+    # Test Projects classification
+    project_content = "3월까지 API 개발 완료하기"
+    result = analyzer.analyze_memo(project_content)
+    assert result["agendas"][0]["category"] == "Projects"
+
+    # Test Areas classification
+    area_content = "팀 1on1 미팅 정기 진행"
+    result = analyzer.analyze_memo(area_content)
+    assert result["agendas"][0]["category"] == "Areas"
+
+def test_atomic_write_failure_recovery():
+    """Test backup restoration on write failure"""
+    file_manager = FileManager("/tmp/test_vault")
+    test_path = Path("/tmp/test_vault/test.md")
+
+    # Create initial file
+    test_path.write_text("original content")
+
+    # Mock write failure
+    with patch('builtins.open', side_effect=IOError("Write failed")):
+        with pytest.raises(IOError):
+            file_manager.safe_update_file(test_path, "new content")
+
+    # Verify backup restoration
+    assert test_path.read_text() == "original content"
+```
+
+#### Integration Testing
+```python
+def test_full_pipeline():
+    """Test complete memo processing pipeline"""
+    controller = AgentController("/tmp/test_vault")
+
+    # Setup test environment
+    setup_test_vault("/tmp/test_vault")
+    create_test_memo("/tmp/test_vault/00_INBOX/test_memo.md",
+                    "API 셋업하기\n팀 미팅 정기 진행")
+
+    # Run analysis
+    results = controller.analyze_and_merge_all_files()
+
+    # Verify outputs
+    assert len(results) == 2
+    assert Path("/tmp/test_vault/01_AGENDAS/Projects/API_셋업.md").exists()
+    assert Path("/tmp/test_vault/01_AGENDAS/Areas/팀_미팅.md").exists()
+    assert Path("/tmp/test_vault/00_INBOX/_ARCHIVED/test_memo.md").exists()
+```
+
+#### Configuration Testing
+```python
+def test_rules_validation():
+    """Test rules.json structure validation"""
+    rules = load_rules("/tmp/test_vault")
+
+    # Validate required structure
+    assert "para_classification" in rules
+    assert "projects" in rules["para_classification"]
+    assert "areas" in rules["para_classification"]
+    assert len(rules["para_classification"]["projects"]["keywords"]) > 0
+
+    # Test keyword functionality
+    keywords = rules["para_classification"]["projects"]["keywords"]
+    assert "기한" in keywords or "완료" in keywords
+```
+
+### 📚 Development Guidelines
+
+#### Code Style Standards
+```python
+# ✅ Good: Use pathlib.Path consistently
+from pathlib import Path
+
+def process_file(file_path: Path) -> bool:
+    """Process markdown file with proper path handling"""
+    if not file_path.exists():
+        logger.error(f"File not found: {file_path}")
+        return False
+    return True
+
+# ❌ Bad: Mixed string/Path usage
+def process_file(file_path: str) -> bool:
+    import os
+    if not os.path.exists(file_path):  # Inconsistent with Path usage elsewhere
+        return False
+```
+
+#### Error Handling Patterns
+```python
+# ✅ Good: Structured error messages with context
+try:
+    result = analyzer.analyze_memo(content)
+except APIError as e:
+    logger.error(f"AI_API_FAILED: {e.message} | Content length: {len(content)} | Provider: Claude")
+    return create_error_agenda(content, str(e))
+
+# ❌ Bad: Generic error handling
+try:
+    result = analyzer.analyze_memo(content)
+except Exception as e:
+    logger.error(f"Error: {e}")
+    raise
+```
+
+#### Module Dependencies
+- **No Circular Imports**: Maintain clear dependency hierarchy (`main_controller` → modules → utilities)
+- **Minimal Coupling**: Each module should be independently testable with mock dependencies
+- **Vault Path Injection**: Never hard-code absolute paths; always use vault_path parameter
+
+#### Type Hints & Documentation
+```python
+from typing import Dict, List, Any, Optional
+from pathlib import Path
+
+def analyze_and_merge_files(
+    vault_path: Path,
+    date_filter: Optional[str] = None,
+    analysis_only: bool = False
+) -> List[Dict[str, Any]]:
+    """
+    Analyze memo files and merge results into agenda files.
+
+    Args:
+        vault_path: Root path of the Obsidian vault
+        date_filter: Process only files matching YYYY-MM-DD format
+        analysis_only: If True, perform read-only analysis without file modifications
+
+    Returns:
+        List of processed agenda dictionaries with topics, categories, and tasks
+
+    Raises:
+        VaultNotFoundError: If vault_path doesn't exist
+        ConfigurationError: If rules.json is invalid
+    """
+```
+
 ---
 
 > 📚 **For AI-Specific Information**:
