@@ -1,5 +1,12 @@
 # 🟡 Gemini 사용 가이드 - 메모 자동화 에이전트
 
+## 🚨 **시작하기 전에 - 필수 읽기**
+👉 **[AI 공통 작업 지침](.ai-docs/AI_COMMON_INSTRUCTIONS.md)** **← 모든 작업 전 필수 읽기**
+
+**⚠️ 중요**: 위 공통 지침을 먼저 읽고 PROJECT_STATUS.md를 확인한 후 아래 Gemini 특화 내용을 참고하세요.
+
+---
+
 > **📋 기본 시스템 참조**: 전체 시스템 아키텍처, PARA 분류 규칙, 공통 기능은 **[SYSTEM.md](.ai-docs/SYSTEM.md)**를 참조하세요
 
 ## 🚀 Gemini 특화 개요

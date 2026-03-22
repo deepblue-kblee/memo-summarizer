@@ -1,5 +1,12 @@
 # 🔵 Claude Code Guide for Memo Automation Agent
 
+## 🚨 **시작하기 전에 - MUST READ**
+👉 **[AI 공통 작업 지침](.ai-docs/AI_COMMON_INSTRUCTIONS.md)** **← 모든 작업 전 필수 읽기**
+
+**⚠️ CRITICAL**: 위 공통 지침을 먼저 읽고 PROJECT_STATUS.md를 확인한 후 아래 Claude 특화 내용을 참고하세요.
+
+---
+
 > **📋 Base System Reference**: For complete system architecture, PARA classification rules, and common functionality, see **[SYSTEM.md](.ai-docs/SYSTEM.md)**
 
 ## 🎯 Claude-Specific Overview
