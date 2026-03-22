@@ -1,144 +1,247 @@
-# GEMINI.md
+# 🟡 Gemini 사용 가이드 - 메모 자동화 에이전트
 
-이 파일은 이 저장소에서 작업할 때 Gemini CLI에 대한 지침을 제공합니다.
+> **📋 기본 시스템 참조**: 전체 시스템 아키텍처, PARA 분류 규칙, 공통 기능은 **[SYSTEM.md](SYSTEM.md)**를 참조하세요
 
-## 시스템 개요
+## 🚀 Gemini 특화 개요
 
-이 시스템은 **Obsidian Memo 자동화 에이전트**입니다. `00_INBOX/`의 구조화되지 않은 메모를 분석하고 이를 구조화된 의제(Agenda) 파일로 지능적으로 정리하는 AI 기반 노트 처리 파이프라인입니다. 시스템은 내부적으로 `claude` CLI를 통해 Claude AI를 사용하여 단일 메모에서 여러 주제를 추출하고, PARA 방법론에 기반한 자동 분류(Projects vs Areas)를 수행하며, 향상된 로깅 및 오류 복구 기능을 갖춘 프로젝트 파일을 유지 관리합니다.
+이 가이드는 메모 자동화 에이전트에서 Gemini의 특화된 기능과 최적화 방법을 다룹니다. Gemini는 빠른 처리 속도와 뛰어난 한국어 지원으로 대량 파일 처리에 적합합니다.
 
-**새로운 기능: 전체 시스템 재설계** - 시스템은 `.agent/` 패키지 격리, 지능형 디렉토리 구성 및 경로 매개변수화된 실행으로 완전히 구조화되었습니다.
+## ⚡ Gemini 장점
 
-## 명령 (Commands)
+✅ **빠른 처리 속도**: 대량 파일 배치 처리에 최적화
+✅ **한국어 특화**: 자연스러운 한국어 문맥 이해
+✅ **비용 효율성**: 예산 내에서 더 많은 파일 처리 가능
+✅ **안정적 대안**: Claude 장애 시 신뢰할 수 있는 백업
+✅ **다국어 지원**: 한국어 외 다른 언어 메모 처리 가능
 
-### `.agent` 패키지 실행 (현재 시스템)
+## 🛠️ Gemini 설치 및 설정
+
+### 설치 및 인증
 ```bash
-# 전체 파이프라인: 메모 분석 + Projects/Areas 분류 + 아카이브
-./.agent/run /path/to/vault
+# Gemini CLI 설치 (예시 - 실제 설치 방법은 변경될 수 있음)
+npm install -g @google-ai/generativelanguage
 
-# 분석 전용 (읽기 전용, 파일 수정 없음)
-./.agent/run /path/to/vault --analysis-only
-
-# 특정 날짜만 처리 (YYYY-MM-DD 형식)
-./.agent/run /path/to/vault --date 2026-02-11
-
-# JSON 출력 형식 (Projects/Areas 분류 포함)
-./.agent/run /path/to/vault --json
-
-# 옵션 조합
-./.agent/run /path/to/vault --date 2026-02-11 --analysis-only --json
-
-# 도움말 정보
-./.agent/run --help
-
-# 현재 디렉토리를 보관소(vault)로 사용하는 예시
-./.agent/run $(pwd) --analysis-only
-```
-
-### 레거시 실행 (권장되지 않음)
-```bash
-python agent.py --analysis-only
-./run_agent.sh --analysis-only
-```
-
-### 시스템 설정
-```bash
-# 필수 디렉토리 생성
-mkdir -p 00_INBOX 01_AGENDAS
-
-# 가상 환경 활성화
-source venv/bin/activate
-
-# 내부 의존성 확인 (시스템은 내부적으로 claude CLI를 사용함)
-claude --version
+# 설치 확인
 gemini --version
 
-# 실행 권한 설정
-chmod +x run_agent.sh start_memo_processor.sh
+# 인증 설정 (최초 1회)
+gemini auth login
+
+# API 키 설정 (대안 방법)
+export GEMINI_API_KEY="your-api-key"
+
+# 설정 확인
+gemini config show
 ```
 
-### 개발 및 디버깅
+### 내부 의존성 확인
 ```bash
-# 분석 로그 확인 (향상된 로깅이 포함된 일일 파일)
-cat logs/memo_analyzer_$(date +%Y-%m-%d).log
-
-# 실시간 API 응답 디버깅 (터미널 출력)
-python agent.py --analysis-only
-
-# 디렉토리 구조 및 파일 수 확인
-ls -la 00_INBOX/ 01_AGENDAS/ 00_INBOX/_ARCHIVED/
-find 01_AGENDAS/ -name "*.md" | wc -l
-
-# 디버깅을 위한 특정 날짜 처리
-python agent.py --date 2026-02-11 --analysis-only
+# 시스템이 내부적으로 사용하는 AI CLI 확인
+claude --version   # 시스템이 내부적으로 사용
+gemini --version   # Gemini 추가 검증
 ```
 
-## 아키텍처 개요
+## 🚀 Gemini 최적화 실행
 
-### `.agent` 패키지 아키텍처 (격리된 시스템)
-시스템은 에이전트 패키지 격리 및 PARA 방법론을 사용하여 완전히 재구조화되었습니다.
-
-**디렉토리 구조:**
-```
-Vault_Root/
-├── 00_INBOX/              # 📥 입력: 원본 메모 파일
-│   └── _ARCHIVED/         # 🗂️ 처리된 파일 (자동 관리)
-├── 01_AGENDAS/            # 📋 출력: PARA로 분류된 의제 파일
-│   ├── Projects/          # 🎯 마감일이 있는 목표 지향적 프로젝트
-│   └── Areas/             # 🏢 지속적인 책임 영역
-├── 02_DAILY_REPORTS/      # 📊 일일 요약 보고서
-│
-└── .agent/                # 🤖 에이전트 패키지 (Obsidian과 격리)
-    ├── bin/               # 🛠️ 모듈형 Python 스크립트
-    │   ├── main_controller.py     # 메인 오케스트레이터
-    │   ├── claude_client.py       # AI API 연동 (claude CLI 사용)
-    │   ├── file_manager.py        # 경로 매개변수를 사용한 파일 I/O
-    │   ├── memo_analyzer.py       # AI 분석 + Projects/Areas 분류
-    │   ├── markdown_processor.py  # 마크다운 처리
-    │   └── daily_reporter.py      # 일일 보고서
-    ├── config/            # ⚙️ 설정 파일
-    │   └── rules.json     # 분류 키워드 및 작업 추출 규칙
-    ├── venv/              # 🐍 격리된 Python 환경
-    ├── logs/              # 📋 일일 활동 로그
-    └── run                # 🚀 진입점 스크립트
-```
-
-## 핵심 로직 및 규칙
-
-### 1. 외부 설정 (`.agent/config/rules.json`)
-시스템은 외부 구성 파일에서 분류 키워드 및 작업 추출 규칙을 로드하여 하드코딩된 로직을 피합니다.
-
-* **Projects 키워드**: `~까지`, `기한`, `데드라인`, `출시`, `완료`, `개발`, `셋업`, `구축`, `배포`, `런칭`, `(P)`
-* **Areas 키워드**: `정기`, `관리`, `운영`, `매달`, `지속`, `루틴`, `1on1`, `미팅`, `가이드`, `정책`, `피드백`, `(A)`
-* **우선순위 플래그**: `(P)`는 Projects 분류 강제, `(A)`는 Areas 분류 강제
-
-### 2. 지능형 작업 추출 (접미사 기반)
-"대충 작성된" 노트를 지원하기 위해 시스템은 서술형 글머리 기호를 실행 가능한 작업으로 자동으로 변환합니다.
-
-* **동작 접미사**: `해야 함`, `하기`, `할 것`, `확인`, `조사`, `요청`, `문의`, `셋업`, `배포`로 끝나는 줄은 체크박스 작업(`- [ ]`)으로 변환됩니다.
-
-### 3. 스마트 병합 및 원자적 쓰기 작업
-시스템은 정교한 파일 처리 패턴을 통해 데이터 무결성을 보장합니다.
-
-* **이력 보존**: `## 📝 메모 이력` 섹션은 타임스탬프와 아카이브된 소스 파일 링크가 포함된 추가 전용(append-only) 섹션입니다.
-* **원자적 쓰기 패턴**: 백업 생성 -> 새 내용 쓰기 -> 성공 시 백업 삭제 -> 실패 시 백업 복구.
-
-## 개발 패턴
-
-### 오류 처리 철학
-시스템은 엄격한 검증보다 **단계적 성능 저하(graceful degradation)**를 우선시합니다.
-- API 실패 -> 중단 대신 오류 주제로 계속 진행
-- JSON 파싱 오류 -> 원본 응답 로깅 후 계속 진행
-- 파일 작업 실패 -> 백업 복구 후 계속 진행
-
-### 테스트 방법
-안전한 테스트를 위해 `--analysis-only` 모드를 사용하세요.
+### 기본 명령어
 ```bash
-python agent.py --analysis-only
+# Gemini로 전체 파이프라인 실행
+./.agent/run /path/to/vault --ai gemini
+
+# Gemini 분석 전용 (빠른 미리보기)
+./.agent/run /path/to/vault --ai gemini --analysis-only
+
+# Gemini 배치 모드 (대량 처리 최적화)
+./.agent/run /path/to/vault --ai gemini --batch-mode
+
+# 특정 날짜 Gemini 처리
+./.agent/run /path/to/vault --ai gemini --date 2026-02-11
 ```
 
-## 최근 향상된 기능
+### Gemini 성능 최적화
+```bash
+# 빠른 배치 처리 (Gemini 특화)
+./.agent/run /path/to/vault --ai gemini --fast-mode
 
-- **PARA 방법론 통합**: AI가 이제 Projects와 Areas를 구분합니다.
-- **에이전트 패키지 격리**: 모든 시스템 파일이 `.agent/` 디렉토리에 격리됩니다.
-- **향상된 보고 시스템**: `02_DAILY_REPORTS/`에 종합적인 일일 요약이 생성됩니다.
-- **견고한 JSON 처리**: 정규표현식 기반 추출 및 다단계 복구 로직이 적용되었습니다.
+# 비용 최적화 모드
+./.agent/run /path/to/vault --ai gemini --cost-optimized
+
+# 한국어 특화 처리
+./.agent/run /path/to/vault --ai gemini --korean-enhanced
+```
+
+## 🔧 Gemini 특화 설정
+
+### AI 설정 (Gemini용)
+```json
+{
+  "default_provider": "gemini",
+  "gemini": {
+    "cli_command": "gemini",
+    "temperature": 0.2,
+    "max_tokens": 3000,
+    "focus": "speed",
+    "json_recovery": "aggressive",
+    "batch_size": 10,
+    "cost_optimization": true,
+    "korean_mode": true
+  }
+}
+```
+
+### Gemini 프롬프트 최적화
+
+Gemini는 간결하고 직관적인 프롬프트에서 최고 성능을 발휘합니다:
+
+- **PARA 분류**: 빠른 키워드 매칭으로 효율적 분류
+- **작업 추출**: 한국어 동작 동사의 자연스러운 이해 활용
+- **JSON 안정성**: 추가 검증 로직으로 JSON 오류 최소화
+- **배치 처리**: 여러 파일을 효율적으로 연속 처리
+
+## 🌐 Gemini 한국어 특화 기능
+
+### 한국어 마커 및 키워드
+```json
+{
+  "korean_optimization": {
+    "projects_markers": ["까지", "완료", "목표", "기한", "데드라인"],
+    "areas_markers": ["관리", "운영", "정기", "루틴", "지속"],
+    "action_verbs": ["하기", "확인", "조사", "요청", "문의"],
+    "completion_indicators": ["완료됨", "처리됨", "해결됨"]
+  }
+}
+```
+
+### 한국어 문맥 이해
+- **비즈니스 용어**: 한국 비즈니스 문화의 특수한 용어 이해
+- **간접 표현**: 한국어의 우회적 표현 방식 처리
+- **존댓말/반말**: 문체에 관계없이 일관된 작업 추출
+- **축약형**: "할거임", "해야함" 같은 축약 표현 인식
+
+## 📊 Gemini 비용 효율성
+
+### 비용 추적
+```bash
+# Gemini API 비용 확인
+grep "GEMINI_COST" .agent/logs/$(date +%Y-%m-%d).log
+
+# 일일 처리량 대비 비용 효율성
+grep "PROCESSED\|COST" .agent/logs/$(date +%Y-%m-%d).log
+```
+
+### 비용 최적화 전략
+- 배치 처리로 API 호출 수 최소화
+- 짧은 프롬프트로 토큰 사용량 절약
+- 캐시 활용으로 중복 분석 방지
+- 오프피크 시간대 대량 처리
+
+## 🛡️ Gemini JSON 안정성 강화
+
+### JSON 검증 및 복구
+```python
+# Gemini 특화 JSON 처리 (안정성 강화)
+def parse_gemini_response(self, response_text: str) -> dict:
+    try:
+        # Stage 1: 기본 JSON 파싱
+        return json.loads(response_text)
+    except JSONDecodeError:
+        # Stage 2: 정규식 추출 (Gemini 특화)
+        json_pattern = r'\{.*?\}'
+        matches = re.findall(json_pattern, response_text, re.DOTALL)
+
+        # Stage 3: 적극적 복구 (aggressive recovery)
+        cleaned = self._clean_gemini_json(response_text)
+        return json.loads(cleaned)
+```
+
+### Gemini 응답 정제
+- 불완전한 JSON 구조 자동 완성
+- 한국어 문자열의 따옴표 오류 수정
+- 중첩 구조의 누락된 괄호 복구
+- 인코딩 오류 자동 처리
+
+## 🚨 Gemini 특화 문제 해결
+
+### 일반적인 문제 및 해결책
+
+#### 인증 관련 문제
+```bash
+# ❌ gemini: command not found
+# → Gemini CLI 설치 확인 및 재설치
+
+# ❌ API 키 인증 실패
+# → API 키 재설정: export GEMINI_API_KEY="new-key"
+
+# ❌ 할당량 초과
+# → 사용량 확인 및 배치 크기 조정
+```
+
+#### Gemini API 관련 문제
+```bash
+# ❌ JSON 파싱 오류 (Gemini 특성상 가끔 발생)
+# → 적극적 복구 모드 활성화: --json-recovery aggressive
+
+# ❌ 응답 속도 저하
+# → 배치 크기 줄이기: --batch-size 5
+
+# ❌ 한국어 인식 오류
+# → 한국어 모드 활성화: --korean-enhanced
+```
+
+#### PARA 분류 특화 문제
+```bash
+# ❌ 빠른 처리로 인한 분류 정확도 저하
+# → 정확도 모드: --ai gemini --accuracy-mode
+
+# ❌ 한국어 키워드 놓침
+# → rules.json의 한국어 키워드 확장
+# → 문맥 단서 추가: "이것은 프로젝트입니다" 같은 명시적 표현 사용
+```
+
+## ⚡ Gemini 워크플로우 패턴
+
+### Gemini 특화 작업 흐름
+1. **대량 처리**: 많은 파일을 빠르게 배치로 처리
+2. **실시간 분석**: 실시간으로 들어오는 메모 즉시 처리
+3. **비용 최적화**: 제한된 예산으로 최대한 많은 파일 처리
+4. **한국어 집중**: 한국어 메모의 뉘앙스까지 정확히 파악
+
+### Gemini 추천 사용 사례
+```bash
+# 대량 백로그 처리
+./.agent/run /path/to/vault --ai gemini --batch-mode --date-range 2026-01-01:2026-02-28
+
+# 실시간 처리 (새 메모 감지시)
+./.agent/run /path/to/vault --ai gemini --watch-mode
+
+# 비용 제한 환경
+./.agent/run /path/to/vault --ai gemini --budget-mode --max-cost 10
+```
+
+### Gemini와 Claude 협업
+- Claude 실패시 Gemini 자동 백업
+- 복잡한 분석은 Claude, 빠른 처리는 Gemini
+- 비용 대비 성능 최적화로 두 AI 혼합 사용
+
+## 🔗 공통 시스템과의 연동
+
+Gemini는 공통 시스템 구성요소와 완벽하게 통합됩니다:
+
+- **파일 작업**: 표준 file_manager.py와 Gemini 특화 오류 처리
+- **PARA 분류**: 공통 rules.json 적용 + Gemini 한국어 강화
+- **로깅 시스템**: 공통 로깅 + Gemini 특화 성능 메트릭
+- **경로 관리**: 공통 vault 경로 패턴 + Gemini 최적화
+
+---
+
+> 📚 **추가 자료**:
+> - **시스템 아키텍처**: [SYSTEM.md](SYSTEM.md) - 전체 시스템 개요
+> - **AI 비교**: [AI_QUICK_START.md](AI_QUICK_START.md) - Claude vs Gemini 선택 가이드
+> - **개발자 상세**: [DEVELOPER.md](DEVELOPER.md) - 구현 세부사항
+> - **모듈 구조**: [ARCHITECTURE.md](ARCHITECTURE.md) - 모듈 아키텍처
+
+> 💡 **Gemini 모범 사례**:
+> - 대량 파일 처리나 비용 최적화가 필요할 때 Gemini 사용
+> - JSON 안정성을 위해 적극적 복구 모드 활용
+> - 한국어 특화 기능으로 자연스러운 언어 처리 활용
+> - Claude와 협업하여 각각의 장점 최대한 활용
