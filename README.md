@@ -368,18 +368,18 @@ vi .agent/config/rules.json
 
 ## 💡 Best Practices
 
-### 🤖 Multi-AI 사용법 (✅ 작업 연속성 완성)
+### 🤖 Multi-AI 지원 (✅ 환경 독립성 완성)
 ```bash
-# Claude 사용 (정확도 우선)
-./.agent/run /path/to/vault --ai claude
-→ 복잡한 분석, 애매한 분류, 상세한 디버깅
+# 어떤 AI든 동일한 개발 작업 수행
+./.agent/run /path/to/vault --ai claude   # Claude 환경
+./.agent/run /path/to/vault --ai gemini   # Gemini 환경
+./.agent/run /path/to/vault               # 기본 (사용 가능한 AI)
 
-# Gemini 사용 (효율성 우선)
-./.agent/run /path/to/vault --ai gemini
-→ 대량 처리, 비용 최적화, 한국어 특화
+→ 메모 분석, 코드 수정, 문서 업데이트 등 모든 repo 개발 작업
+→ AI 선택은 사용자 몫, AI는 목적 달성에만 집중
 
-# 🚀 핵심: AI별 특장점 활용 + 일관된 협업
-→ CLAUDE.md/GEMINI.md (60줄)에서 최적 사용 시기 확인
+# 🚀 핵심: 환경에 상관없이 일관된 개발 협업
+→ CLAUDE.md/GEMINI.md에서 환경별 설정만 확인
 → AI_COMMON_INSTRUCTIONS.md로 통일된 워크플로우
 ```
 
