@@ -3,7 +3,10 @@
 ## 🚨 **시작하기 전에 - 필수 읽기**
 👉 **[AI 공통 작업 지침](.ai-docs/AI_COMMON_INSTRUCTIONS.md)** **← 모든 작업 전 필수 읽기**
 
-**⚠️ 중요**: 위 공통 지침을 먼저 읽고 PROJECT_STATUS.md를 확인한 후 아래 Gemini 특화 내용을 참고하세요.
+**⚠️ 중요**: 위 공통 지침을 먼저 읽고 다음 순서로 현재 상황을 파악하세요:
+1. **[PROGRESS.md](.ai-docs/PROGRESS.md)** - 현재까지 완료된 작업 상태
+2. **[PLAN.md](.ai-docs/PLAN.md)** - 다음 우선순위 작업 확인
+3. 아래 Gemini 특화 내용 참고
 
 ---
 
@@ -241,12 +244,37 @@ Gemini는 공통 시스템 구성요소와 완벽하게 통합됩니다:
 
 ---
 
-> 📚 **추가 자료**:
+## ⚡ **AI 작업 연속성 (Priority 1 작업)**
+
+### 📋 **Gemini 세션 시작 체크리스트**
+```bash
+# 1. 현재 우선순위 작업 파악
+grep -A 10 "Priority 1" .ai-docs/PLAN.md
+
+# 2. 완료된 작업 확인 (중복 방지)
+grep -A 10 "✅ 완료된 작업" .ai-docs/PROGRESS.md
+
+# 3. Git 상태 확인
+git log --oneline -3 && git status
+```
+
+### 🚀 **Gemini 최적 사용 시기**
+- **✅ 대량 파일 처리** - Gemini의 빠른 배치 처리 능력
+- **✅ 비용 효율성 중요** - 예산 제한 환경에서 최대 처리량
+- **✅ 실시간 처리** - 새로운 메모의 즉시 분류 필요시
+- **✅ 한국어 자연어** - 한국어 특화 언어 모델의 장점 활용
+
+---
+
+> 📚 **참고 문서 (4개 파일 구조)**:
+> - **진행 상황**: [PROGRESS.md](.ai-docs/PROGRESS.md) - 완료된 작업 및 현재 상태
+> - **작업 계획**: [PLAN.md](.ai-docs/PLAN.md) - 다음 우선순위 작업
 > - **시스템 아키텍처**: [SYSTEM.md](.ai-docs/SYSTEM.md) - 전체 시스템 개요
-> - **프로젝트 상태**: [PROJECT_STATUS.md](.ai-docs/PROJECT_STATUS.md) - 현재 작업 컨텍스트
+> - **AI 공통 지침**: [AI_COMMON_INSTRUCTIONS.md](.ai-docs/AI_COMMON_INSTRUCTIONS.md) - Multi-AI 워크플로우
 
 > 💡 **Gemini 모범 사례**:
-> - 대량 파일 처리나 비용 최적화가 필요할 때 Gemini 사용
-> - JSON 안정성을 위해 적극적 복구 모드 활용
-> - 한국어 특화 기능으로 자연스러운 언어 처리 활용
-> - Claude와 협업하여 각각의 장점 최대한 활용
+> - **속도 우선**: 대량 파일 처리나 비용 최적화가 필요할 때 Gemini 사용
+> - **JSON 안정성**: 적극적 복구 모드로 안정성 향상
+> - **한국어 특화**: 자연스러운 한국어 언어 처리 능력 최대 활용
+> - **Multi-AI 협업**: Claude와 역할 분담으로 각자의 장점 극대화
+> - **작업 연속성**: PROGRESS.md → PLAN.md 순서로 읽어 효율적 세션 시작

@@ -3,7 +3,10 @@
 ## 🚨 **시작하기 전에 - MUST READ**
 👉 **[AI 공통 작업 지침](.ai-docs/AI_COMMON_INSTRUCTIONS.md)** **← 모든 작업 전 필수 읽기**
 
-**⚠️ CRITICAL**: 위 공통 지침을 먼저 읽고 PROJECT_STATUS.md를 확인한 후 아래 Claude 특화 내용을 참고하세요.
+**⚠️ CRITICAL**: 위 공통 지침을 먼저 읽고 다음 순서로 현재 상황을 파악하세요:
+1. **[PROGRESS.md](.ai-docs/PROGRESS.md)** - 현재까지 완료된 작업 상태
+2. **[PLAN.md](.ai-docs/PLAN.md)** - 다음 우선순위 작업 확인
+3. 아래 Claude 특화 내용 참고
 
 ---
 
@@ -235,12 +238,37 @@ Claude integrates seamlessly with the common system components:
 
 ---
 
-> 📚 **Additional Resources**:
-> - **System Architecture**: [SYSTEM.md](.ai-docs/SYSTEM.md) - Complete system overview
-> - **Project Status**: [PROJECT_STATUS.md](.ai-docs/PROJECT_STATUS.md) - Current work context
+## 🔄 **AI 작업 연속성 (Priority 1 작업)**
 
-> 💡 **Claude Best Practices**:
-> - Use Claude for complex, ambiguous memo analysis requiring reasoning
-> - Leverage Claude's JSON reliability for critical data processing
-> - Monitor costs but trust Claude's accuracy to reduce retry overhead
-> - Take advantage of Claude's detailed error context for debugging
+### 📋 **Claude 세션 시작 체크리스트**
+```bash
+# 1. 현재 우선순위 작업 파악
+grep -A 10 "Priority 1" .ai-docs/PLAN.md
+
+# 2. 완료된 작업 확인 (중복 방지)
+grep -A 10 "✅ 완료된 작업" .ai-docs/PROGRESS.md
+
+# 3. Git 상태 확인
+git log --oneline -3 && git status
+```
+
+### 🎯 **Claude 최적 사용 시기**
+- **✅ 복잡한 PARA 분류** - Claude의 추론 능력 활용
+- **✅ JSON 정확성 중요** - Claude의 신뢰성 높은 구조화 출력
+- **✅ 오류 진단 필요** - Claude의 상세한 오류 컨텍스트 제공
+- **✅ 한국어 비즈니스 문맥** - 미묘한 뉘앙스까지 정확히 파악
+
+---
+
+> 📚 **참고 문서 (4개 파일 구조)**:
+> - **진행 상황**: [PROGRESS.md](.ai-docs/PROGRESS.md) - 완료된 작업 및 현재 상태
+> - **작업 계획**: [PLAN.md](.ai-docs/PLAN.md) - 다음 우선순위 작업
+> - **시스템 아키텍처**: [SYSTEM.md](.ai-docs/SYSTEM.md) - 전체 시스템 개요
+> - **AI 공통 지침**: [AI_COMMON_INSTRUCTIONS.md](.ai-docs/AI_COMMON_INSTRUCTIONS.md) - Multi-AI 워크플로우
+
+> 💡 **Claude 모범 사례**:
+> - **정확성 우선**: 복잡하고 모호한 메모 분석에 Claude 사용
+> - **JSON 신뢰성**: 중요한 데이터 처리시 Claude의 JSON 안정성 활용
+> - **비용 vs 품질**: 비용을 모니터링하되 Claude의 정확성으로 재시도 비용 절감
+> - **오류 컨텍스트**: Claude의 상세한 오류 설명으로 디버깅 최적화
+> - **작업 연속성**: PROGRESS.md → PLAN.md 순서로 읽어 효율적 세션 시작

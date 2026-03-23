@@ -1,16 +1,60 @@
-# 🤖 Obsidian 메모 자동화 에이전트
+# 🤖 Multi-AI Obsidian 메모 자동화 에이전트
 
-AI-powered note processing pipeline that analyzes unstructured memos and intelligently organizes them into structured agenda files. The system uses directory organization inspired by PARA methodology (Projects/Areas structure) with external configuration support.
+**Multi-AI powered** note processing pipeline that analyzes unstructured memos and intelligently organizes them into structured agenda files. The system supports **Claude** and **Gemini** for optimal performance, uses PARA methodology (Projects/Areas structure), and provides seamless AI collaboration workflow.
+
+> **🚀 New**: Multi-AI 지원으로 정확성(Claude)과 속도(Gemini)를 동시에 활용
 
 ## ✨ 핵심 기능
 
+### **🤖 Multi-AI 엔진**
+- **🔵 Claude**: 정확성 중요한 복잡 분석, 신뢰성 높은 JSON 처리
+- **🟡 Gemini**: 빠른 대량 처리, 비용 효율적 배치 작업
+- **⚡ AI 작업 연속성**: 1분 내 세션 시작으로 즉시 작업 가능
+
+### **📝 지능적 메모 처리**
 - 🔍 **다중 주제 추출**: 하나의 메모에서 여러 독립적인 주제 자동 분리
 - 📝 **지능적 작업 추출**: 자연어 텍스트에서 실행 가능한 작업 자동 변환
 - 🎯 **자동 분류**: Projects (목표형) vs Areas (관리형) 구조로 체계적 정리
 - 🔧 **외부 설정 기반**: `.agent/config/rules.json`에서 분류 키워드 및 규칙 관리
+
+### **🛡️ 안전성 & 확장성**
 - 🛡️ **Atomic Write 패턴**: 백업 → 쓰기 → 검증으로 데이터 손실 방지
 - 📊 **포괄적 로깅**: 실시간 디버깅, API 비용 추적, 상세 감사 추적
 - 🚀 **Vault 이식성**: 경로 파라미터로 어떤 Obsidian vault에서도 동작
+- 📈 **작업 연속성**: PROGRESS.md/PLAN.md 구조로 매끄러운 협업 지원
+
+## 📚 문서 구조 (NEW: 4개 파일 최적화)
+
+### **AI와 사용자를 위한 효율적 문서 체계**
+```bash
+📁 프로젝트 루트/
+├── 📈 .ai-docs/PROGRESS.md          # 진행 상황 (완료된 작업들)
+├── 📋 .ai-docs/PLAN.md              # 작업 계획 (다음 우선순위)
+├── 🏗️ .ai-docs/SYSTEM.md            # 시스템 아키텍처 + 개발 가이드
+├── 🤖 .ai-docs/AI_COMMON_*          # Multi-AI 워크플로우 지침
+├── 🔵 CLAUDE.md                    # Claude 특화 최적화 가이드
+├── 🟡 GEMINI.md                    # Gemini 특화 최적화 가이드
+└── 📖 README.md                    # 이 문서 (프로젝트 개요)
+```
+
+### **읽기 순서 가이드**
+
+#### **👤 사용자(사람)**
+```bash
+🚀 빠른 복귀 (5분):     PROGRESS.md → PLAN.md
+📚 전체 이해 (15분):    README.md → SYSTEM.md → PROGRESS.md
+```
+
+#### **🤖 AI 세션**
+```bash
+⚡ 자동 워크플로우 (1분): AI별 가이드 → PROGRESS.md → PLAN.md → 즉시 작업 시작
+```
+
+### **문서별 역할**
+- **PROGRESS.md**: 🎯 지금까지 무엇을 완료했는지 (중복 방지)
+- **PLAN.md**: 📋 다음에 무엇을 해야 하는지 (우선순위별)
+- **SYSTEM.md**: 🏗️ 시스템이 어떻게 동작하는지 (아키텍처)
+- **README.md**: 📖 프로젝트가 무엇인지 (개요 및 시작)
 
 ## 📂 시스템 아키텍처
 
@@ -41,34 +85,68 @@ ObsidianVault/
 
 ## 🚀 빠른 시작
 
-### 1. 시스템 요구사항
+### **👤 사용자(사람) 시작 가이드**
+
+#### **🔴 급한 상황**: "지금 당장 뭘 해야 하지?"
 ```bash
-# Claude Code CLI 확인 (필수!)
-claude --version
+# 1. 긴급 작업 확인
+grep -A 5 "🚨" .ai-docs/PLAN.md
 
-# Python 3.x 확인
-python3 --version
+# 2. 현재 상태 확인
+git status && git log --oneline -3
 
-# 디렉토리 자동 생성 (make_folders.sh 사용)
-./make_folders.sh
+# 3. AI에게 상황 파악 요청
+"Claude/Gemini, 현재 상황 요약하고 Priority 1 작업 진행해줘"
 ```
 
-### 2. **NEW: .agent 실행 방식**
+#### **🟡 정기 복귀**: "오랜만에 돌아왔는데..."
 ```bash
-# 전체 PARA 파이프라인: 분석 → 분류 → 병합 → 아카이브
+# 빠른 복귀 (5분)
+head -20 .ai-docs/PROGRESS.md  # 완료된 작업 확인
+head -15 .ai-docs/PLAN.md      # 다음 작업 확인
+```
+
+#### **🟢 새로 참여**: "이 프로젝트가 뭐지?"
+```bash
+# 전체 이해 (15분)
+cat README.md                  # 이 문서 (프로젝트 개요)
+head -50 .ai-docs/SYSTEM.md    # 시스템 아키텍처
+head -20 .ai-docs/PROGRESS.md  # 현재 상태
+```
+
+### **🤖 AI 지원 & 시스템 요구사항**
+
+#### **Multi-AI CLI 설치**
+```bash
+# Claude Code CLI (정확성 중요한 작업)
+claude --version
+claude auth login
+
+# Gemini CLI (빠른 처리용 - 구현 예정)
+gemini --version
+gemini auth login
+
+# Python 환경
+python3 --version
+./make_folders.sh  # 디렉토리 구조 생성
+```
+
+#### **Multi-AI 실행 방식**
+```bash
+# Claude로 정확한 분석 (복잡한 메모, JSON 안정성 중요)
+./.agent/run /path/to/vault --ai claude
+
+# Gemini로 빠른 처리 (대량 파일, 비용 효율성 중요)
+./.agent/run /path/to/vault --ai gemini
+
+# 기본 실행 (현재는 Claude 사용)
 ./.agent/run /path/to/vault
 
-# 안전 모드: 분석만 수행 (파일 수정 없음)
+# 안전 모드 (분석만, 파일 수정 없음)
 ./.agent/run /path/to/vault --analysis-only
 
-# 특정 날짜만 처리
+# 특정 날짜 처리
 ./.agent/run /path/to/vault --date 2026-03-05
-
-# JSON 형식 PARA 통계 출력
-./.agent/run /path/to/vault --json
-
-# 현재 디렉토리를 vault로 사용
-./.agent/run $(pwd) --analysis-only
 ```
 
 ## 🎯 PARA 분류 시스템 (Rule-based)
@@ -214,16 +292,31 @@ vi .agent/config/rules.json
 
 ## 🐛 트러블슈팅
 
-### Claude CLI 이슈
+### Multi-AI CLI 이슈
 ```bash
 # ❌ claude: command not found
 → Claude Code CLI 설치: https://claude.ai/code
 
-# ❌ 인증 실패
-→ claude auth login 재실행
+# ❌ gemini: command not found
+→ Gemini CLI 설치 및 설정 (구현 예정)
+
+# ❌ AI 인증 실패
+→ claude auth login 또는 gemini auth login 재실행
 
 # ❌ API 한도 초과
-→ Claude 대시보드에서 사용량 확인
+→ 대시보드에서 사용량 확인, 다른 AI로 전환 고려
+```
+
+### AI 작업 연속성 이슈
+```bash
+# ❌ "현재 상황을 모르겠어요"
+→ PROGRESS.md와 PLAN.md 확인하도록 AI에게 안내
+
+# ❌ "중복 작업하고 있는 것 같아요"
+→ grep -A 10 "✅ 완료된 작업" .ai-docs/PROGRESS.md 실행
+
+# ❌ "우선순위를 모르겠어요"
+→ grep -A 10 "Priority 1" .ai-docs/PLAN.md 실행
 ```
 
 ### PARA 분류 이슈
@@ -258,14 +351,44 @@ vi .agent/config/rules.json
 - **이식성**: 임의 vault 경로에서 즉시 실행 가능
 
 ### 확장 방향
-- **Multi-vault 지원**: 여러 vault 동시 처리
-- **웹 인터페이스**: CLI → GUI 확장
-- **다른 AI 모델**: Claude → OpenAI/Gemini 지원
-- **추가 출력 형식**: Notion, Jira, Todoist 연동
+- **✅ Multi-AI 완성**: Claude + Gemini 문서 레벨 완료, 코드 레벨 구현 예정
+- **🚧 OpenAI 추가**: GPT-4 지원으로 3-AI 시스템 구축
+- **📋 하이브리드 AI**: 컨텍스트 기반 자동 AI 선택 로직
+- **🌐 웹 인터페이스**: CLI → GUI 확장
+- **🔗 외부 연동**: Notion, Jira, Todoist 연동
+- **📊 성능 모니터링**: AI별 비용/품질 메트릭 대시보드
 
 ---
 
 ## 💡 Best Practices
+
+### 🤖 Multi-AI 활용 전략
+```bash
+# 🔵 Claude 최적 사용 시기
+✅ 복잡한 PARA 분류         → 정확성 중요
+✅ JSON 안정성 필요         → 신뢰성 높은 구조화
+✅ 오류 진단 및 디버깅       → 상세한 컨텍스트 제공
+✅ 한국어 비즈니스 문맥      → 미묘한 뉘앙스 파악
+
+# 🟡 Gemini 최적 사용 시기
+✅ 대량 파일 배치 처리       → 빠른 속도
+✅ 비용 효율성 중요         → 예산 제한 환경
+✅ 실시간 메모 처리         → 즉시 분류 필요
+✅ 한국어 자연어 처리       → 언어 특화 모델
+```
+
+### 🔄 효율적인 작업 연속성
+```bash
+# 사용자 세션 시작
+1. PROGRESS.md (2분) → 어디까지 완료되었는지
+2. PLAN.md (2분) → 다음에 무엇을 해야 하는지
+3. AI 선택 및 작업 지시
+
+# AI 세션 관리
+1. "현재 Priority 1 작업 진행해줘" (즉시 실행)
+2. 결과 검토 후 다음 단계 결정
+3. 완료시 PROGRESS.md/PLAN.md 자동 업데이트
+```
 
 ### 📝 효과적인 메모 작성
 ```markdown
