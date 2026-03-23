@@ -1,274 +1,70 @@
-# 🔵 Claude Code Guide for Memo Automation Agent
+# 🔵 Claude 환경 가이드
 
-## 🚨 **시작하기 전에 - MUST READ**
-👉 **[AI 공통 작업 지침](.ai-docs/AI_COMMON_INSTRUCTIONS.md)** **← 모든 작업 전 필수 읽기**
+> **🎯 이 파일의 목적**: Claude 환경에서 작업할 때 Claude의 특장점과 최적 사용법만 설명. 공통 작업 지침은 [AI_COMMON_INSTRUCTIONS.md](.ai-docs/AI_COMMON_INSTRUCTIONS.md) 참조.
 
-**⚠️ CRITICAL**: 위 공통 지침을 먼저 읽고 다음 순서로 현재 상황을 파악하세요:
-1. **[PROGRESS.md](.ai-docs/PROGRESS.md)** - 현재까지 완료된 작업 상태
-2. **[PLAN.md](.ai-docs/PLAN.md)** - 다음 우선순위 작업 확인
-3. 아래 Claude 특화 내용 참고
+## 🚨 **필수 읽기 순서**
+1. **[AI 공통 작업 지침](.ai-docs/AI_COMMON_INSTRUCTIONS.md)** ← 모든 작업 전 필수
+2. **[PROGRESS.md](.ai-docs/PROGRESS.md)** ← 현재 완료 상태
+3. **[PLAN.md](.ai-docs/PLAN.md)** ← 다음 우선순위 작업
+4. 아래 Claude 특화 내용
 
 ---
 
-> **📋 Base System Reference**: For complete system architecture, PARA classification rules, and common functionality, see **[SYSTEM.md](.ai-docs/SYSTEM.md)**
+## ⚡ **Claude 특장점**
 
-## 🎯 Claude-Specific Overview
+✅ **복잡한 분석**: 다층적 메모 분석 및 상세한 추론
+✅ **높은 정확도**: 애매한 PARA 분류에서 뛰어난 판단력
+✅ **구조화된 출력**: 안정적인 JSON 포맷 및 오류 복구
+✅ **상세한 디버깅**: 문제 발생 시 구체적인 컨텍스트 제공
 
-This guide covers Claude Code CLI-specific features and optimizations for the Memo Automation Agent. Claude excels at structured analysis and reliable JSON parsing, making it ideal for complex memo classification and task extraction.
+## 🎯 **Claude 최적 사용 시기**
 
-## ✨ Claude Advantages
+**🔥 Claude를 선택해야 하는 경우:**
+- 복잡하고 애매한 내용의 메모 분석
+- 정확도가 중요한 PARA 분류 작업
+- 오류 발생 시 상세한 디버깅 정보 필요
+- JSON 구조가 복잡하거나 안정성이 중요한 경우
 
-✅ **Superior JSON Parsing**: Reliable structured output with complex nested data
-✅ **Advanced Reasoning**: Excellent at ambiguous PARA classification decisions
-✅ **Korean Text Analysis**: Superior understanding of Korean business context
-✅ **Error Context**: Provides detailed failure information for debugging
-✅ **Cost Transparency**: Built-in usage tracking and optimization
-
-## 🚀 Claude-Specific Setup
-
-### Installation & Authentication
+**⚡ 기본 실행 명령어:**
 ```bash
-# Install Claude Code CLI (required)
-# Visit: https://claude.ai/code for installation
-
-# Verify installation
-claude --version
-
-# Initial authentication (one-time setup)
-claude auth login
-
-# Verify configuration
-claude config show
-```
-
-### Claude Configuration
-```bash
-# Check Claude CLI settings
-cat ~/.claude/settings.json
-
-# Verify API access
-claude test-connection
-```
-
-## ⚡ Claude-Optimized Execution
-
-### Primary Commands
-```bash
-# Claude-specific execution with precision mode
+# 표준 실행 (정확도 우선)
 ./.agent/run /path/to/vault --ai claude
 
-# Analysis with Claude's detailed reasoning
+# 분석만 (테스트용)
 ./.agent/run /path/to/vault --ai claude --analysis-only
 
-# Claude with detailed logging for debugging
+# 상세 로깅 (디버깅용)
 ./.agent/run /path/to/vault --ai claude --verbose
-
-# Cost-aware processing for specific dates
-./.agent/run /path/to/vault --ai claude --date 2026-02-11
 ```
 
-### Claude Performance Optimization
-```bash
-# For complex multi-topic memos (Claude's strength)
-./.agent/run /path/to/vault --ai claude --deep-analysis
+## 💡 **Claude vs 다른 AI**
 
-# For high-accuracy PARA classification
-./.agent/run /path/to/vault --ai claude --precision-mode
-```
+| 작업 유형 | Claude 추천도 | 이유 |
+|-----------|---------------|------|
+| **복잡한 메모 분석** | ⭐⭐⭐ | 상세한 추론과 컨텍스트 이해 |
+| **애매한 PARA 분류** | ⭐⭐⭐ | 뛰어난 판단력과 정확도 |
+| **오류 디버깅** | ⭐⭐⭐ | 상세한 오류 컨텍스트 제공 |
+| **대량 배치 처리** | ⭐⭐ | 정확하지만 상대적으로 느림 |
+| **비용 최적화** | ⭐ | 고품질이지만 상대적으로 비쌈 |
 
-## 🔧 Claude-Specific Configuration
+## 🔧 **Claude 특화 설정 (선택사항)**
 
-### AI Configuration for Claude
+고급 사용자를 위한 Claude 최적화:
 ```json
 {
-  "default_provider": "claude",
   "claude": {
-    "cli_command": "claude",
     "temperature": 0.1,
-    "max_tokens": 4000,
     "focus": "accuracy",
-    "json_validation": "strict",
-    "cost_tracking": true,
-    "timeout": 30000
+    "json_validation": "strict"
   }
 }
 ```
 
-### Claude Prompt Optimization
-Claude works best with structured, detailed prompts. The system uses Claude-optimized prompts for:
-
-- **PARA Classification**: Leverages Claude's reasoning for ambiguous cases
-- **Task Extraction**: Uses Claude's understanding of Korean action verbs
-- **JSON Structure**: Takes advantage of Claude's reliable JSON formatting
-- **Error Recovery**: Utilizes Claude's ability to provide detailed error context
-
-## 📊 Claude Cost Management
-
-### Cost Tracking
-```bash
-# View API cost logs (Claude-specific)
-grep "COST" .agent/logs/$(date +%Y-%m-%d).log
-
-# Cost summary for date range
-grep "API_COST" .agent/logs/*.log | awk '{sum += $NF} END {print "Total: $" sum}'
-```
-
-### Cost Optimization Tips
-- Use `--analysis-only` for testing to avoid charges
-- Process files in batches during off-peak hours
-- Leverage Claude's accuracy to reduce retry costs
-- Monitor daily usage with built-in tracking
-
-## 🧠 Claude Analysis Engine Details
-
-### JSON Parsing Excellence
-Claude's superior JSON handling includes:
-
-```python
-# Claude-optimized JSON parsing (from memo_analyzer.py)
-def analyze_memo(self, content: str) -> Dict[str, Any]:
-    # Claude-specific prompt with structured output requirements
-    prompt = f"""
-    분석할 메모: {content}
-
-    **CRITICAL REQUIREMENT - STRICTLY JSON OUTPUT ONLY**
-
-    REQUIRED JSON FORMAT:
-    {{
-        "agendas": [
-            {{
-                "topic": "sanitized_topic_name",
-                "category": "Projects|Areas",
-                "tasks": ["실행 가능한 작업1", "실행 가능한 작업2"],
-                "summary": "이 주제에 대한 간단 요약"
-            }}
-        ]
-    }}
-    """
-```
-
-### Enhanced Error Recovery
-Claude provides detailed error context:
-
-```python
-# Multi-stage JSON parsing with Claude-specific recovery
-try:
-    # Stage 1: Direct JSON parse (Claude's strength)
-    result = json.loads(response_content)
-except JSONDecodeError:
-    # Stage 2: Regex extraction with Claude context
-    json_match = re.search(r'\{(?:[^{}]|{(?:[^{}]|{[^{}]*})*})*\}', response_text)
-    # Stage 3: Claude-specific error context extraction
-    error_context = self._extract_claude_error_context(response_text)
-```
-
-## 🚨 Claude-Specific Troubleshooting
-
-### Common Issues & Solutions
-
-#### Authentication Issues
-```bash
-# ❌ claude: command not found
-# → Install Claude Code CLI: https://claude.ai/code
-
-# ❌ Authentication failed
-# → Re-authenticate: claude auth login
-
-# ❌ API quota exceeded
-# → Check usage: claude usage --current-month
-```
-
-#### Claude API Issues
-```bash
-# ❌ Request timeout
-# → Increase timeout in config or retry with shorter content
-
-# ❌ Rate limiting
-# → Use --batch-mode with delays between requests
-
-# ❌ JSON parsing issues (rare with Claude)
-# → Check logs: grep "JSON_PARSE_FAILED" .agent/logs/$(date +%Y-%m-%d).log
-```
-
-#### PARA Classification Issues
-```bash
-# ❌ Incorrect classification
-# → Review .agent/config/rules.json keywords
-# → Use (P) or (A) flags in memo content for override
-
-# ❌ Missing tasks
-# → Check action_suffixes in rules.json
-# → Use more explicit action verbs in Korean
-```
-
-## 📈 Claude Development Patterns
-
-### Leveraging Claude's Strengths
-1. **Complex Analysis**: Use Claude for multi-layered memo analysis
-2. **Reasoning Tasks**: Leverage Claude's ability to handle ambiguous PARA classification
-3. **Structured Output**: Take advantage of Claude's reliable JSON formatting
-4. **Error Diagnosis**: Use Claude's detailed error reporting for debugging
-
-### Claude-Optimized Workflows
-```bash
-# For development and testing
-./.agent/run $(pwd) --ai claude --analysis-only --verbose
-
-# For production with cost monitoring
-./.agent/run /path/to/production/vault --ai claude --cost-alert
-
-# For complex memo analysis
-./.agent/run /path/to/vault --ai claude --deep-reasoning
-```
-
-### Advanced Claude Features
-- **Context Retention**: Claude maintains context across multiple API calls
-- **Incremental Processing**: Efficient handling of large memo batches
-- **Quality Assurance**: Built-in validation of classification accuracy
-- **Cost Prediction**: Estimate processing costs before execution
-
-## 🔗 Integration with Common System
-
-Claude integrates seamlessly with the common system components:
-
-- **File Operations**: Uses standard file_manager.py with Claude-specific error handling
-- **PARA Classification**: Applies common rules.json with Claude's reasoning enhancement
-- **Logging System**: Integrates with common logging while adding Claude-specific metrics
-- **Path Management**: Follows common vault path patterns with Claude optimizations
-
 ---
 
-## 🔄 **AI 작업 연속성 (Priority 1 작업)**
+## 📋 **참고 문서**
+- **공통 워크플로우**: [AI_COMMON_INSTRUCTIONS.md](.ai-docs/AI_COMMON_INSTRUCTIONS.md)
+- **시스템 아키텍처**: [SYSTEM.md](.ai-docs/SYSTEM.md)
+- **다른 AI와 비교**: [GEMINI.md](GEMINI.md)
 
-### 📋 **Claude 세션 시작 체크리스트**
-```bash
-# 1. 현재 우선순위 작업 파악
-grep -A 10 "Priority 1" .ai-docs/PLAN.md
-
-# 2. 완료된 작업 확인 (중복 방지)
-grep -A 10 "✅ 완료된 작업" .ai-docs/PROGRESS.md
-
-# 3. Git 상태 확인
-git log --oneline -3 && git status
-```
-
-### 🎯 **Claude 최적 사용 시기**
-- **✅ 복잡한 PARA 분류** - Claude의 추론 능력 활용
-- **✅ JSON 정확성 중요** - Claude의 신뢰성 높은 구조화 출력
-- **✅ 오류 진단 필요** - Claude의 상세한 오류 컨텍스트 제공
-- **✅ 한국어 비즈니스 문맥** - 미묘한 뉘앙스까지 정확히 파악
-
----
-
-> 📚 **참고 문서 (4개 파일 구조)**:
-> - **진행 상황**: [PROGRESS.md](.ai-docs/PROGRESS.md) - 완료된 작업 및 현재 상태
-> - **작업 계획**: [PLAN.md](.ai-docs/PLAN.md) - 다음 우선순위 작업
-> - **시스템 아키텍처**: [SYSTEM.md](.ai-docs/SYSTEM.md) - 전체 시스템 개요
-> - **AI 공통 지침**: [AI_COMMON_INSTRUCTIONS.md](.ai-docs/AI_COMMON_INSTRUCTIONS.md) - Multi-AI 워크플로우
-
-> 💡 **Claude 모범 사례**:
-> - **정확성 우선**: 복잡하고 모호한 메모 분석에 Claude 사용
-> - **JSON 신뢰성**: 중요한 데이터 처리시 Claude의 JSON 안정성 활용
-> - **비용 vs 품질**: 비용을 모니터링하되 Claude의 정확성으로 재시도 비용 절감
-> - **오류 컨텍스트**: Claude의 상세한 오류 설명으로 디버깅 최적화
-> - **작업 연속성**: PROGRESS.md → PLAN.md 순서로 읽어 효율적 세션 시작
+> **💡 Claude 모범 사례**: 정확도가 중요한 작업에 집중 사용하고, 대량 처리나 비용 최적화가 필요한 경우 Gemini 고려
