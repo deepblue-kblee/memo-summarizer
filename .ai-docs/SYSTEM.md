@@ -299,31 +299,29 @@ ls -la 01_AGENDAS/Projects/ 01_AGENDAS/Areas/ 02_DAILY_REPORTS/
 
 ### 🚀 Adding New AI Providers
 
-Extend the system to support additional AI providers by following this pattern:
+To support additional AI providers, create a new client class that returns the same format:
 
 ```python
-# Extend claude_client.py for new providers
-class OpenAIClient(ClaudeClient):
+# Simple pattern for new AI providers
+class GeminiClient:
     def call_ai_service(self, prompt: str) -> Dict[str, Any]:
-        # OpenAI API implementation
-        response = openai.Completion.create(
-            model="gpt-4",
-            prompt=prompt,
-            temperature=0.1
-        )
+        # Call gemini CLI and return same format as ClaudeClient
+        result = subprocess.run(["gemini", prompt], ...)
         return {
             "success": True,
-            "content": response.choices[0].text,
-            "cost": calculate_openai_cost(response.usage),
-            "session_id": f"openai_{uuid.uuid4()}",
-            "raw": response
+            "content": result_text
         }
 
-class GeminiClient(ClaudeClient):
+class OpenAIClient:
     def call_ai_service(self, prompt: str) -> Dict[str, Any]:
-        # Gemini API implementation
-        pass
+        # Call OpenAI and return same format
+        return {
+            "success": True,
+            "content": openai_response_text
+        }
 ```
+
+**Key principle**: Any AI that can process text and return structured results can be plugged in.
 
 ### 📋 Custom PARA Categories
 
