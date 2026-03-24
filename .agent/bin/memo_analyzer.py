@@ -11,13 +11,19 @@ from datetime import datetime
 from typing import Dict, Any
 from pathlib import Path
 from claude_client import ClaudeClient
+from gemini_client import GeminiClient
 
 
 class MemoAnalyzer:
     """메모 분석 클래스"""
 
-    def __init__(self, vault_path: str = None):
-        self.claude_client = ClaudeClient()
+    def __init__(self, vault_path: str = None, ai_client: str = "auto"):
+        """
+        Args:
+            vault_path: Vault 경로 (선택사항)
+            ai_client: AI 클라이언트 선택 ("claude", "gemini", "auto")
+        """
+        self.ai_client = self._initialize_ai_client(ai_client)
 
         # 로그 디렉토리 설정 (agent 패키지 기준으로 상대 경로 사용)
         # 현재 스크립트의 상위 디렉토리(.agent)에서 logs 폴더 설정
@@ -32,6 +38,31 @@ class MemoAnalyzer:
 
         print("🔍 메모 분석기가 초기화되었습니다.")
         print(f"📋 로그 파일: {self.log_file}")
+
+    def _initialize_ai_client(self, ai_client: str):
+        """AI 클라이언트를 초기화합니다."""
+        if ai_client == "claude":
+            print("🔵 Claude 클라이언트를 사용합니다.")
+            return ClaudeClient()
+        elif ai_client == "gemini":
+            print("🟡 Gemini 클라이언트를 사용합니다.")
+            return GeminiClient()
+        elif ai_client == "auto":
+            # 자동 선택: claude -> gemini 순으로 시도
+            print("🤖 사용 가능한 AI 클라이언트를 자동으로 선택합니다...")
+            try:
+                print("   🔵 Claude 시도 중...")
+                return ClaudeClient()
+            except Exception as e:
+                print(f"   ⚠️ Claude 실패: {e}")
+                try:
+                    print("   🟡 Gemini 시도 중...")
+                    return GeminiClient()
+                except Exception as e2:
+                    print(f"   ❌ Gemini도 실패: {e2}")
+                    raise RuntimeError("사용 가능한 AI 클라이언트가 없습니다. claude 또는 gemini CLI를 설치하고 인증해주세요.")
+        else:
+            raise ValueError(f"지원하지 않는 AI 클라이언트: {ai_client}. 'claude', 'gemini', 'auto' 중 하나를 선택해주세요.")
 
     def _log_to_file(self, message: str):
         """로그 파일에 메시지를 추가 (append) 방식으로 기록합니다."""
@@ -124,7 +155,7 @@ REQUIRED JSON FORMAT:
 
         # Claude Code CLI 호출
         try:
-            response = self.claude_client.call_claude_code(prompt)
+            response = self.ai_client.call_claude_code(prompt)
         except Exception as e:
             error_msg = f"Claude Code CLI 호출 중 예외 발생: {str(e)}"
             print(f"❌ {error_msg}")

@@ -18,21 +18,22 @@ from daily_reporter import DailyReporter
 
 
 class AgentController:
-    """메인 에이전트 컨트롤러 (PARA + 경로 파라미터 지원)"""
+    """메인 에이전트 컨트롤러 (PARA + 경로 파라미터 + Multi-AI 지원)"""
 
-    def __init__(self, vault_path: str):
+    def __init__(self, vault_path: str, ai_client: str = "auto"):
         """
         Args:
             vault_path: Obsidian Vault의 루트 경로
+            ai_client: AI 클라이언트 선택 ("claude", "gemini", "auto")
         """
         self.vault_path = Path(vault_path).resolve()
 
         print("🤖 PARA 메모 자동화 에이전트를 시작합니다...")
         print(f"🗂️ Vault 경로: {self.vault_path}")
 
-        # 모듈 초기화 (모두 vault_path 전달)
+        # 모듈 초기화 (vault_path + ai_client 전달)
         self.file_manager = FileManager(str(self.vault_path))
-        self.memo_analyzer = MemoAnalyzer(str(self.vault_path))
+        self.memo_analyzer = MemoAnalyzer(str(self.vault_path), ai_client)
         self.markdown_processor = MarkdownProcessor()
         self.daily_reporter = DailyReporter(str(self.vault_path))
 
@@ -293,6 +294,14 @@ def main():
         help='특정 날짜 파일만 처리 (예: 2026-02-11)'
     )
 
+    parser.add_argument(
+        '--ai',
+        type=str,
+        choices=['claude', 'gemini', 'auto'],
+        default='auto',
+        help='AI 클라이언트 선택 (기본값: auto - 사용 가능한 것 자동 선택)'
+    )
+
     try:
         args = parser.parse_args()
 
@@ -313,7 +322,7 @@ def main():
                 print("❌ 날짜 형식이 잘못되었습니다. YYYY-MM-DD 형식으로 입력해주세요. (예: 2026-02-11)")
                 return 1
 
-        controller = AgentController(str(vault_path))
+        controller = AgentController(str(vault_path), args.ai)
 
         if args.analysis_only:
             if args.date:
