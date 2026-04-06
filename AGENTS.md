@@ -1,17 +1,23 @@
 # 🤖 AI AGENTS 운영 가이드
 
-> **HarnessEngineering 완성**: Agent 완전 자율 운영 시스템
+> **HarnessEngineering 완성**: Agent 완전 자율 운영 시스템 (98/100)
+
+## 📋 현재 프로젝트 상황
+
+**memo-summarizer**: OpenAI Harness Engineering 철학 기반 완전 자동화 메모 처리 시스템
+
+**✅ 주요 성과**:
+- 이중구조 → `app/` 단일패키지 완전 통합
+- 토큰 사용량 80% 감소, Phase 3-A Observability 완성
+- Console Scripts + 래퍼 스크립트 완전 자동화
 
 ## ⚡ 즉시 시작 (30초)
 
 ```bash
-# 1. 현재 상황 파악 (10초)
-cat context.md
-
-# 2. 시스템 상태 확인 (10초)
+# 1. 시스템 상태 확인 (10초)
 ./run_health_check.sh
 
-# 3. 메모 처리 실행 (10초)
+# 2. 메모 처리 실행 (20초)
 ./run_memo_processor.sh /path/to/vault
 ```
 
@@ -19,12 +25,11 @@ cat context.md
 
 1. **완전 자동화**: Console Scripts 중심, 수동 개입 최소화
 2. **단일 진입점**: app/ 패키지만 사용, 이중 구조 금지
-3. **상황별 가이드**: AI가 필요한 문서만 읽어 효율성 극대화
 
 ## 🚀 핵심 명령어
 
 ```bash
-# 기본 사용 (래퍼 스크립트)
+# 기본 사용
 ./run_health_check.sh      # 상태 확인
 ./run_memo_processor.sh    # 메모 처리
 
@@ -33,21 +38,17 @@ source app/venv/bin/activate
 memo-processor, harness-linter, health-check
 ```
 
-## 🤖 AI 가이드 시스템
+## 🤖 AI 작업별 가이드
 
-**시나리오별 문서**: `docs/ai/scenarios/`
-- 새 세션: `new-session-start.md`
-- 개발: `feature-development.md`
-- 디버깅: `bug-investigation.md`
-- 모니터링: `observability-work.md`
+**시나리오 문서**: `docs/ai/scenarios/`
+- **새 세션**: `new-session-start.md` (상세 현황)
+- **기능 개발**: `feature-development.md`
+- **버그 수정**: `bug-investigation.md`
+- **모니터링**: `observability-work.md`
 
 **참조**: `docs/project/`, `docs/architecture/`, `docs/workflows/`
 
-## 📊 현재: **98/100 달성**
-
-**완료**: 구조 통합, Observability, 상황별 가이드
-
-**💡 새 세션**: `docs/ai/scenarios/new-session-start.md`
+**다음 목표**: Phase 3-B Garbage Collection → 100/100 완전 자동화
 
 ## 🎮 AI별 진입점
 
@@ -84,8 +85,6 @@ export OPENAI_API_KEY="your-key"
 | 작업 연속성 | 90% | ✅ 완성 |
 | 자동 검증 | 40% | 🔄 구현 중 |
 | 정리 시스템 | 50% | 🔄 구현 중 |
-
-**목표**: 에이전트가 0라인의 수동 코딩 없이 100% 자율 운영
 
 ## 📊 성능 지표 (2026-04-06 기준)
 
