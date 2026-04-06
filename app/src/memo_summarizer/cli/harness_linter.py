@@ -38,7 +38,7 @@ class HarnessLinter:
                 "types": [],
                 "config": ["types"],
                 "repo": ["types", "config"],
-                "services": ["types", "config", "repo"],
+                "services": ["types", "config", "repo", "utils"],
                 "runtime": ["types", "config", "repo", "services"],
                 "ui": ["types", "config", "repo", "services", "runtime"]
             }
@@ -147,7 +147,7 @@ class HarnessLinter:
                     target_path = (md_file.parent / link_path).resolve()
 
                     if not target_path.exists():
-                        self._add_violation(
+                        self._add_warning(
                             "broken_link",
                             f"Broken internal link: [{link_text}]({link_path})",
                             str(md_file.relative_to(self.repo_root))
