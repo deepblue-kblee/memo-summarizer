@@ -29,7 +29,9 @@ _backup/
 # Claude Code CLI
 .claude/
 
-# Document directory
-00_INBOX/
-01_AGENDAS/
-02_DAILY_REPORTS/
+# Obsidian Vault directory (separated from development)
+vault/
+
+# Build artifacts
+app/build/
+**/__pycache__/

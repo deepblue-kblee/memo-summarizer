@@ -10,8 +10,8 @@ import os
 from datetime import datetime
 from typing import Dict, Any
 from pathlib import Path
-from claude_client import ClaudeClient
-from gemini_client import GeminiClient
+from memo_summarizer.utils.claude_client import ClaudeClient
+from memo_summarizer.utils.gemini_client import GeminiClient
 
 
 class MemoAnalyzer:

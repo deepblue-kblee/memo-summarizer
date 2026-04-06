@@ -1,3 +1,6 @@
 # Minimal dependencies for memo-summarizer app
 schedule>=1.2.0
 anthropic>=0.20.0
+
+# Phase 3-A Observability dependencies
+psutil>=5.9.0

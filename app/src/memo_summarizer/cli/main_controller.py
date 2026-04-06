@@ -10,11 +10,11 @@ import argparse
 from pathlib import Path
 from typing import List, Dict, Any
 
-# 현재 스크립트와 같은 디렉토리의 모듈들 import
-from file_manager import FileManager
-from memo_analyzer import MemoAnalyzer
-from markdown_processor import MarkdownProcessor
-from daily_reporter import DailyReporter
+# memo_summarizer 패키지 모듈들 import
+from memo_summarizer.utils.file_manager import FileManager
+from memo_summarizer.services.memo_analyzer import MemoAnalyzer
+from memo_summarizer.utils.markdown_processor import MarkdownProcessor
+from memo_summarizer.services.daily_reporter import DailyReporter
 
 
 class AgentController:

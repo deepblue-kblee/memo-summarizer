@@ -1,18 +1,18 @@
 #!/bin/bash
 # PARA 메모 자동화 에이전트 실행 스크립트
-# Path-parameterized wrapper for the main controller
+# Wrapper for the memo-processor console script
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BIN_DIR="$SCRIPT_DIR/bin"
+APP_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Check if virtual environment exists and activate it
-VENV_DIR="$SCRIPT_DIR/venv"
+VENV_DIR="$APP_DIR/venv"
 if [ -d "$VENV_DIR" ]; then
     source "$VENV_DIR/bin/activate"
 fi
 
-# Convert relative path to absolute path before changing directory
+# Convert relative path to absolute path before running
 if [ $# -gt 0 ]; then
     # Convert first argument (vault_path) to absolute path if it exists
     FIRST_ARG="$1"
@@ -36,11 +36,9 @@ if [ $# -gt 0 ]; then
         fi
     fi
 
-    # Run the main controller with absolute vault path and remaining arguments
-    cd "$BIN_DIR"
-    python3 main_controller.py "$ABS_VAULT_PATH" "$@"
+    # Run the memo-processor console script with absolute vault path
+    memo-processor "$ABS_VAULT_PATH" "$@"
 else
     # No arguments provided, run as-is (will show help)
-    cd "$BIN_DIR"
-    python3 main_controller.py
+    memo-processor
 fi

@@ -40,19 +40,10 @@
 **📱 실제 적용 예시**:
 ```markdown
 # AI_CONTEXT.md (AI 전용 압축 컨텍스트)
-## 🚨 즉시 실행 상황
-- **현재 브랜치**: main (4 commits ahead)
-- **다음 우선순위**: Priority 1 - AI_COMMON_INSTRUCTIONS.md 업데이트
-- **블로킹 이슈**: 없음
-
-## ⚡ 빠른 명령어
-git status && git log --oneline -3
-grep -A 10 "Priority 1" .ai-docs/PLAN.md
-
-## 🔗 상세 정보 링크
-- 완료된 작업 → PROGRESS.md
-- 계획된 작업 → PLAN.md
-- 시스템 구조 → SYSTEM.md
+# 템플릿 섹션들 (중복 방지):
+# - 즉시 실행 상황: BEST_PRACTICES.md 참조
+# - 빠른 명령어: AI_COMMON_INSTRUCTIONS.md 참조
+# - 상세 정보 링크: AGENTS.md 또는 BEST_PRACTICES.md 참조
 ```
 
 ---
@@ -204,15 +195,7 @@ estimated_completion: 2026-03-24
 
 #### B) 핸드오프 프로토콜 (Handoff Protocol)
 
-**🤝 AI 간 작업 인계 표준**:
-```markdown
-## 🔄 세션 종료 시 인계 정보
-**완료한 작업**: AI_COMMON_INSTRUCTIONS.md 업데이트 완료
-**현재 상태**: 테스트 대기 중
-**다음 AI가 할 일**: `.agent/run --analysis-only` 실행하여 검증
-**주의사항**: rules.json 파일 건드리지 말 것
-**예상 소요시간**: 15분
-```
+**🤝 AI 간 작업 인계 표준**: BEST_PRACTICES.md의 "🔄 세션 종료 시 인계 정보" 템플릿 참조
 
 ---
 

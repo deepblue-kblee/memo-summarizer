@@ -109,12 +109,7 @@ cat > .ai-docs/PROGRESS.md << EOF
 
 ## 🎯 **현재 프로젝트 상태 ($current_date)**
 
-### **프로젝트 개요**
-- **프로젝트**: Obsidian Memo Automation Agent
-- **핵심 기능**: 한국어 메모 → PARA 방법론 기반 자동 분류 → 구조화된 아젠다 파일
-- **주요 AI**: Claude Code CLI, Gemini CLI (Multi-AI 지원)
-- **작업 디렉토리**: \`$(pwd)\`
-- **현재 브랜치**: \`$(git branch --show-current)\`
+# 프로젝트 개요는 PROGRESS.md 또는 README.md 참조
 
 ### **이전 기록**
 📂 **아카이브된 진행상황**: [PROGRESS_${archive_date}.md](archive/PROGRESS_${archive_date}.md)
@@ -124,13 +119,7 @@ cat > .ai-docs/PROGRESS.md << EOF
 ### **🏁 최근 완료 작업**
 - (새로운 작업들이 여기에 추가됩니다)
 
-## 📊 **현재 상태 요약**
-
-### **기술적 완성도**
-- **아키텍처**: PARA 방법론 완전 통합 ✅
-- **Multi-AI 지원**: 문서 레벨 완료, 코드 레벨 진행 중 🚧
-- **확장성**: 새 AI 추가 용이성 확보 ✅
-- **안정성**: Atomic Write 패턴, 오류 복구 로직 ✅
+# 상태 정보는 PROGRESS.md에서 확인하세요
 
 ---
 
@@ -220,33 +209,11 @@ cat > .ai-docs/AI_CONTEXT.md << EOF
 
 > **AI 전용 압축 컨텍스트** - 즉시 실행 가능한 정보만 포함
 
-## 🚨 즉시 실행 상황
+# 템플릿 및 상태 정보는 다음 파일들 참조:
+# - 즉시 실행 상황: BEST_PRACTICES.md
+# - 빠른 명령어: AI_COMMON_INSTRUCTIONS.md
 
-- **Git 브랜치**: \`$current_branch\` ($commits_ahead commits ahead)
-- **Priority 1**: $priority_task
-- **블로커**: $blockers
-- **마지막 커밋**: $last_commit
-- **업데이트**: $(date +%Y-%m-%d\ %H:%M)
-
-## ⚡ 빠른 명령어
-
-\`\`\`bash
-# 현재 상태 확인
-git status && git log --oneline -3
-
-# Priority 1 작업 확인
-grep -A 5 "Priority 1" .ai-docs/PLAN.md
-
-# 프로젝트 테스트
-./.agent/run \$(pwd) --analysis-only
-\`\`\`
-
-## 🔗 상세 정보 링크
-
-- 📈 **전체 진행상황** → [PROGRESS.md](PROGRESS.md)
-- 📋 **다음 계획** → [PLAN.md](PLAN.md)
-- 🏗️ **시스템 구조** → [SYSTEM.md](SYSTEM.md)
-- 📚 **참조 라이브러리** → [reference/INDEX.md](reference/INDEX.md)
+# 상세 정보 링크는 BEST_PRACTICES.md 또는 AGENTS.md 참조
 
 ## 🎯 작업 시작 체크리스트
 

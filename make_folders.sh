@@ -77,9 +77,46 @@ else
     fi
 fi
 
+# Console Scripts 확인
+echo "🔧 Console Scripts 확인 중..."
+source app/venv/bin/activate
+if command -v memo-processor >/dev/null 2>&1; then
+    echo "✅ memo-processor: 사용 가능"
+else
+    echo "❌ memo-processor: 설치 실패"
+fi
+
+if command -v harness-linter >/dev/null 2>&1; then
+    echo "✅ harness-linter: 사용 가능"
+else
+    echo "❌ harness-linter: 설치 실패"
+fi
+
+if command -v memo-analyzer >/dev/null 2>&1; then
+    echo "✅ memo-analyzer: 사용 가능"
+else
+    echo "❌ memo-analyzer: 설치 실패"
+fi
+
+if command -v daily-reporter >/dev/null 2>&1; then
+    echo "✅ daily-reporter: 사용 가능"
+else
+    echo "❌ daily-reporter: 설치 실패"
+fi
+deactivate
+
+echo ""
 echo "🚀 모든 구조와 환경이 준비되었습니다!"
 echo ""
 echo "📝 다음 단계:"
 echo "   1. app/.env에서 API 키 설정"
 echo "   2. 구조적 테스트 실행: python3 app/tests/test_harness_structure.py"
-echo "   3. 개발 시작: source app/venv/bin/activate"
+echo "   3. 시스템 검증: ./run_health_check.sh"
+echo "   4. 메모 처리기 실행: ./run_memo_processor.sh /path/to/vault"
+echo "   5. 품질 검증: ./run_linter.sh"
+echo ""
+echo "🎯 Console Scripts (가상환경 활성화 후):"
+echo "   - memo-processor /path/to/vault"
+echo "   - harness-linter"
+echo "   - memo-analyzer"
+echo "   - daily-reporter"
