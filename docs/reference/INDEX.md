@@ -10,6 +10,9 @@
 - [`TOOLS_AND_PATTERNS.md`](TOOLS_AND_PATTERNS.md) - 검증된 도구와 패턴 모음
 - [`IMPLEMENTATION_GUIDE.md`](IMPLEMENTATION_GUIDE.md) - 실제 적용 가이드
 
+### **문서 작성 가이드**
+- [`MARKDOWN_STYLE_GUIDE.md`](MARKDOWN_STYLE_GUIDE.md) - 마크다운 문서 작성 규칙 (이모지 사용 자제)
+
 ## 🔍 빠른 참조
 
 ### **파일 크기 관리 문제**

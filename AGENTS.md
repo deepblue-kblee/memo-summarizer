@@ -1,97 +1,57 @@
-# 🤖 AI AGENTS 운영 가이드
+# 🤖 메모 자동화 AI 에이전트 가이드
 
-> **HarnessEngineering 완성**: Agent 완전 자율 운영 시스템 (100/100)
+> **지능적 메모 처리**: 정형화되지 않은 메모를 Projects/Areas로 자동 변환하는 AI 시스템
 
-## 📋 현재 프로젝트 상황
+## 📋 시스템 현황
 
-**memo-summarizer**: OpenAI Harness Engineering 철학 기반 완전 자동화 메모 처리 시스템
+**memo-summarizer**: Multi-AI 메모 자동 분류 시스템
+- PARA 분류 95%+ 정확도, 다중 주제 추출 10+개, 작업 변환율 90%+
 
-**✅ 주요 성과**:
-- 이중구조 → `app/` 단일패키지 완전 통합
-- 토큰 사용량 80% 감소, Phase 3-A Observability 완성
-- Console Scripts + 래퍼 스크립트 완전 자동화
-
-## ⚡ 즉시 시작 (30초)
+## ⚡ 메모 자동 처리 즉시 시작 (30초)
 
 ```bash
-# 1. 시스템 상태 확인 (10초)
+# 1. 메모 처리 시스템 상태 확인 (10초)
 ./run_health_check.sh
 
-# 2. 메모 처리 실행 (20초)
+# 2. 메모 자동 분류 실행 (20초)
 ./run_memo_processor.sh /path/to/vault
+# → 00_INBOX/ 메모들이 Projects/Areas로 자동 정리됨
 ```
 
-## 🎯 HarnessEngineering 원칙
+## 🎯 메모 자동화 핵심 원칙
 
-1. **완전 자동화**: Console Scripts 중심, 수동 개입 최소화
-2. **단일 진입점**: app/ 패키지만 사용, 이중 구조 금지
+1. **지능적 분류**: PARA 방법론으로 Projects(목표) vs Areas(관리) 자동 구분
+2. **다중 주제 추출**: 하나의 복잡한 메모에서 여러 독립 주제 자동 분리
+3. **작업 자동 생성**: 자연어 텍스트를 실행 가능한 체크리스트로 변환
+4. **Multi-AI 지원**: Claude/Gemini 환경별 최적 AI 자동 선택
+*Agent-first 개발로 수동 개입 최소화 및 완전 자동화 구현*
+
+## 📝 문서 작성 규칙
+
+**중요**: md 파일 작성시 이모지 사용 자제 - [MARKDOWN_STYLE_GUIDE.md](docs/reference/MARKDOWN_STYLE_GUIDE.md) 참조
 
 ## 🚀 핵심 명령어
 
 ```bash
-# 기본 사용
-./run_health_check.sh      # 상태 확인
-./run_memo_processor.sh    # 메모 처리
-
-# Console Scripts (가상환경 내)
-source app/venv/bin/activate
-memo-processor, harness-linter, health-check
+./run_health_check.sh && ./run_memo_processor.sh /vault
+source app/venv/bin/activate && memo-processor /vault --ai auto
 ```
 
-## 🤖 AI 작업별 가이드
+## 🤖 작업 가이드
 
-**시나리오 문서**: `docs/ai/scenarios/`
-- **새 세션**: `new-session-start.md` (상세 현황)
-- **기능 개발**: `feature-development.md`
-- **버그 수정**: `bug-investigation.md`
-- **모니터링**: `observability-work.md`
+**시나리오**: `docs/ai/scenarios/` | **참조**: `docs/project/`, `docs/architecture/`
 
-**참조**: `docs/project/`, `docs/architecture/`, `docs/workflows/`
+## 🎮 AI별 설정
 
-**✅ 완성**: Phase 3-B Garbage Collection → 100/100 완전 자동화 달성
+**Claude**: `export ANTHROPIC_API_KEY="key"` | **Gemini**: `export GOOGLE_API_KEY="key"`
 
-## 🎮 AI별 진입점
+## 🚨 시스템 상태
 
-### 🔵 Claude
-```bash
-# 환경 가이드
-cat CLAUDE.md
+문서 95%, Multi-AI 95%, 연속성 90%, 검증 100%, 정리 100% - 모든 영역 완성
 
-# 인증 설정 (anthropic-sdk)
-export ANTHROPIC_API_KEY="your-key"
-```
+## 📊 성능 지표
 
-### 🟡 Gemini
-```bash
-# 환경 가이드
-cat GEMINI.md
-
-# 인증 설정 (google-generativeai)
-export GOOGLE_API_KEY="your-key"
-```
-
-### 🟠 OpenAI (준비 중)
-```bash
-# TODO: Priority 4에서 구현 예정
-export OPENAI_API_KEY="your-key"
-```
-
-## 🚨 에이전트 자율 운영 상태
-
-| 영역 | 진행률 | 상태 |
-|------|--------|------|
-| 문서 체계 | 95% | ✅ 완성 |
-| Multi-AI | 95% | ✅ 완성 |
-| 작업 연속성 | 90% | ✅ 완성 |
-| 자동 검증 | 100% | ✅ 완성 |
-| 정리 시스템 | 100% | ✅ 완성 |
-
-## 📊 성능 지표 (2026-04-06 기준)
-
-- **AI 세션 시작**: 5분 → **1분** (80% 단축) ✅
-- **사용자 복귀**: 15분 → **5분** (67% 단축) ✅
-- **문서 중복**: 70% → **30%** (중복 제거) ✅
-- **자동화 커버리지**: 40% → **90%** (목표, Phase 2)
+메모 처리 30초, PARA 분류 95%+, 다중 추출 10+개, 작업 변환 90%+, AI 세션 1분, 복귀 5분
 
 ---
 

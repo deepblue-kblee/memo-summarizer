@@ -20,4 +20,6 @@ memo-processor /vault --ai claude
 
 ---
 
+**📝 문서 작성**: 특별한 요청이 없는 한 이모지 사용 자제 - [스타일 가이드](docs/reference/MARKDOWN_STYLE_GUIDE.md) 참조
+
 **💡 핵심**: HarnessEngineering 완성으로 AI별 차이 없이 동일한 워크플로우 사용
