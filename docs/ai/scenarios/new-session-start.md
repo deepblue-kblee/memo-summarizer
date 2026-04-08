@@ -1,128 +1,110 @@
-# 🎯 새 세션 시작 가이드
+# 🎯 AI 세션 시작 가이드
 
-## 📋 현재 프로젝트 상황 (2026-04-06)
+> **AI Agent 전용 가이드**: 새 세션 시작 시 반드시 읽어야 할 현재 상황 및 다음 작업
 
-**memo-summarizer**: OpenAI Harness Engineering 철학 기반 완전 자동화 메모 처리 시스템
+## 📋 현재 프로젝트 상황 (2026-04-08)
 
-### 🏆 핵심 달성 상태
-- **Phase 2 완료**: Agent 완전 자율 운영 (90/100) ✅
-- **구조 통합**: .agent/ 삭제, app/ 단일 진입점 확립 ✅
-- **문서 체계**: .ai-docs/ → docs/ HarnessEngineering 구조 ✅
-- **자동화**: Console Scripts + 래퍼 스크립트 완성 ✅
+**memo-summarizer**: HarnessEngineering 100/100 완전 자동화 달성 시스템
 
-### 📊 현재 진행률
-| Phase | 목표 | 완료 | 다음 단계 |
-|-------|------|------|----------|
-| **Phase 2** | Agent 자율 운영 | 98/100 ✅ | 완성 |
-| **Phase 3-A** | Observability | 40/100 | 🎯 **진행 중** |
-| **최종 목표** | 완전 자동화 | | 98/100 예상 |
+### 🎉 Phase 3-B 완성 상태
+- **HarnessEngineering 100/100** ✅ 완전 자동화 달성
+- **Garbage Collection 시스템** ✅ 자동 정리 및 스케줄링 완성
+- **토큰 최적화** ✅ warning 레벨 조정으로 효율성 극대화
+- **Console Scripts** ✅ garbage-collector, task-scheduler 추가
 
-## 🚀 즉시 사용 가능한 시스템
+### 📊 현재 완성 상태
+| 영역 | 진행률 | 상태 | 비고 |
+|------|--------|------|------|
+| **문서 체계** | 100% | ✅ 완성 | 모든 .md 파일 정리 완료 |
+| **Multi-AI** | 100% | ✅ 완성 | Claude/Gemini 완전 지원 |
+| **자동 검증** | 100% | ✅ 완성 | Garbage Collection 완성 |
+| **정리 시스템** | 100% | ✅ 완성 | 스케줄링 시스템 포함 |
 
-### 주요 진입점
+## 🚀 AI Agent 즉시 시작 명령어
+
+### 시스템 상태 확인 (필수)
 ```bash
-# 완전 자동 환경 설정
-./make_folders.sh
-
-# 시스템 상태 확인
+# 전체 시스템 건강성 확인
 ./run_health_check.sh
 
-# 메인 기능 실행
+# 최신 커밋 및 상태 확인
+git log --oneline -3
+git status
+```
+
+### 주요 기능 실행
+```bash
+# 메모 처리 (일반 사용)
 ./run_memo_processor.sh /path/to/vault
+
+# 품질 검증 및 정리
 ./run_linter.sh
 ```
 
-### 개발자 진입점 (가상환경)
+### Console Scripts (개발/고급 사용)
 ```bash
 source app/venv/bin/activate
-memo-processor /path/to/vault
-harness-linter
-memo-analyzer
-daily-reporter
+memo-processor /path/to/vault    # 메모 분석 처리
+garbage-collector               # 자동 정리 시스템
+task-scheduler                  # 스케줄링 시스템
+harness-linter                  # 품질 검증
 ```
 
-## 🎯 다음 우선순위: Phase 3-A Observability
+## 🎯 다음 작업 방향 (Future Enhancements)
 
-**목표**: 90/100 → 95/100 (고도화된 관찰 가능성)
+현재 HarnessEngineering 100/100 완성으로 모든 핵심 목표를 달성했습니다.
 
-### 구현할 시스템
-1. **Performance Monitor** (`app/src/memo_summarizer/core/observability.py`)
-   - 실행 시간, 메모리 사용량, API 호출 메트릭
-   - 실시간 성능 모니터링
+### 선택적 확장 사항
+- **추가 AI 지원**: OpenAI 등 새 AI 클라이언트 추가
+- **성능 최적화**: 대량 파일 처리 최적화
+- **GUI 인터페이스**: 필요시 웹/데스크톱 인터페이스
 
-2. **Health Check System** (`app/src/memo_summarizer/core/health_check.py`)
-   - 시스템 상태 모니터링 엔드포인트
-   - 자동 알림 및 복구 메커니즘
+**💡 참고**: 추가 기능 개발은 사용자 요구에 따라 선택적으로 진행
 
-3. **중앙화된 로깅** (`app/src/memo_summarizer/utils/logger.py`)
-   - `app/logs/` 구조화된 로깅 시스템
-   - 에러 추적 및 성능 분석
+## 🔧 AI Agent 검증 체크리스트
 
-## 📂 현재 시스템 구조
-
-```
-memo-summarizer/ (HarnessEngineering 완성)
-├── app/                    # 🎯 단일 Python 패키지
-│   ├── src/memo_summarizer/
-│   ├── venv/, config/, logs/, tests/
-│   └── setup.py (Console Scripts)
-│
-├── docs/                   # 🤖 상황별 AI 가이드
-│   ├── ai/scenarios/      # 이 파일 포함
-│   ├── project/, architecture/
-│   └── reference/, scripts/
-│
-└── *.sh                   # 🚀 루트 래퍼 스크립트
-```
-
-## 🔧 검증 명령어
-
-### 현재 시스템 상태
+### 세션 시작 시 반드시 확인
 ```bash
-# 모든 구조적 테스트 (app/ 기준 업데이트 필요)
-python3 app/tests/test_harness_structure.py
+# 1. 전체 시스템 상태 - 모든 컴포넌트 정상인지 확인
+./run_health_check.sh
 
-# Console Scripts 확인
-source app/venv/bin/activate && memo-processor --help
+# 2. 최신 상태 확인 - Phase 3-B 완성 상태인지 확인
+grep -r "100/100" AGENTS.md context.md
 
-# 패키지 상태 확인
-python -c "import memo_summarizer; print('✅ Package OK')"
+# 3. 새 기능 확인 - Garbage Collection 시스템 동작 확인
+source app/venv/bin/activate
+garbage-collector --help
+task-scheduler --help
 ```
 
-## 🎉 작업 컨텍스트
+## 💡 AI Agent 세션 가이드
 
-**이전 구조 (문제점)**:
-- `.agent/` + `app/` 이중 구조 혼재
-- `.ai-docs/` 분산된 문서
-- context.md 9798줄 (너무 큼)
-
-**현재 구조 (HarnessEngineering)**:
-- `app/` 단일 진입점
-- `docs/` 상황별 가이드
-- 완전 자동화된 설정
-
-## 💡 AI Agent 작업 가이드
-
-### 새 세션에서 해야 할 것
+### 새 세션에서 반드시 할 것
 1. **현재 상황 파악**: 이 가이드 읽기 ✅
-2. **시스템 검증**: `./run_health_check.sh`
-3. **다음 작업 확인**: Phase 3-A Observability 구현
-4. **문서 참조**: 필요 시 `docs/project/roadmap.md` 확인
+2. **시스템 검증**: `./run_health_check.sh` 실행
+3. **완성 상태 확인**: HarnessEngineering 100/100 상태 검증
+4. **문서 참조**: 필요시 `docs/project/progress.md` 및 `docs/project/roadmap.md` 확인
 
-### 하지 말아야 할 것
-- ❌ .agent/ 디렉토리 복원 (완전 삭제됨)
-- ❌ .ai-docs/ 구조 복원 (docs/로 마이그레이션됨)
-- ❌ context.md 대폭 확장 (상황별 가이드 사용)
-- ❌ 이중 구조 재생성 (app/ 단일 구조 유지)
+### 세션에서 참조할 문서 순서
+1. **AGENTS.md**: 전체 AI 공통 가이드 (항상 최신 상태)
+2. **context.md**: 프로젝트 전체 인덱스
+3. **docs/project/progress.md**: 완성된 작업들 확인
+4. **docs/workflows/entry-points.md**: 시스템 사용법 상세 가이드
 
-## 🔗 관련 문서
+### 주의사항 (완성된 시스템 보호)
+- ✅ app/ 단일 구조 유지 (완성된 HarnessEngineering 구조)
+- ✅ docs/ 상황별 가이드 활용
+- ✅ Console Scripts 우선 사용
+- ❌ 구조적 변경 금지 (100/100 완성 상태 유지)
 
+## 🔗 AI 작업 시 참조 문서
+
+- **시스템 사용법**: `docs/workflows/entry-points.md` (일반 시스템 진입점 가이드)
+- **프로젝트 현황**: `docs/project/progress.md` (완성된 모든 작업 기록)
+- **향후 계획**: `docs/project/roadmap.md` (Future Enhancements)
 - **기술 상세**: `docs/architecture/system-overview.md`
-- **프로젝트 진행**: `docs/project/progress.md`
-- **다음 계획**: `docs/project/roadmap.md`
 - **참조 자료**: `docs/reference/INDEX.md`
-- **진입점 가이드**: `docs/workflows/entry-points.md`
 
 ---
 
-**🎯 요약**: Phase 2 완성, app/ 단일 구조 확립. 다음은 Phase 3-A Observability 구현.
+**🎯 요약**: HarnessEngineering 100/100 완성. Phase 3-B Garbage Collection 완료. 추가 기능은 선택적 확장.

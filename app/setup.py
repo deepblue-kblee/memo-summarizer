@@ -25,6 +25,10 @@ setup(
             "observability-monitor=memo_summarizer.core.observability:main",
             "health-check=memo_summarizer.core.health_check:main",
             "log-analyzer=memo_summarizer.utils.logger:main",
+
+            # Phase 3-B Garbage Collection 스크립트들
+            "garbage-collector=memo_summarizer.utils.garbage_collector:main",
+            "task-scheduler=memo_summarizer.core.scheduler:main",
         ],
     },
 )
