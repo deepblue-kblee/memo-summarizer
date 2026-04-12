@@ -33,6 +33,8 @@ class HarnessLinter:
         self.config = {
             "max_agents_md_lines": 100,
             "max_document_lines": 1000,
+            "max_docs_files": 20,          # docs/ 하위 파일 개수 제한
+            "min_section_length": 50,      # 중복 체크할 최소 섹션 길이
             "duplication_threshold": 0.8,  # 80% 유사성
             "excluded_dirs": {
                 'venv', 'vault', '_backup', 'build', 'dist', 'node_modules', 
@@ -73,6 +75,9 @@ class HarnessLinter:
 
         # 1. 문서 크기 검증
         self._validate_document_sizes()
+
+        # 1-1. 문서 파편화 검증 (파일 개수)
+        self._check_document_sprawl()
 
         # 2. 중복 내용 감지
         self._detect_duplication()
@@ -122,6 +127,33 @@ class HarnessLinter:
                     )
             except Exception as e:
                 self._add_warning("file_read_error", f"Cannot read file: {e}", str(md_file.relative_to(self.repo_root)))
+
+    def _check_document_sprawl(self):
+        """문서 파편화 검증 (파일 개수 제한)"""
+        print("📁 문서 파편화 검증 중...")
+
+        docs_dir = self.repo_root / "docs"
+        if not docs_dir.exists():
+            return
+
+        md_files = []
+        for md_file in docs_dir.rglob("*.md"):
+            if not self._is_excluded(md_file):
+                md_files.append(md_file)
+
+        file_count = len(md_files)
+        if file_count > self.config["max_docs_files"]:
+            self._add_violation(
+                "document_sprawl",
+                f"Too many documentation files: {file_count} (Limit: {self.config['max_docs_files']}). Consider merging related guides.",
+                "docs/"
+            )
+        elif file_count > self.config["max_docs_files"] * 0.8:
+            self._add_warning(
+                "document_sprawl_warning",
+                f"Approaching document sprawl limit: {file_count}/{self.config['max_docs_files']}",
+                "docs/"
+            )
 
     def _detect_duplication(self):
         """중복 내용 감지 (토큰 레벨)"""
