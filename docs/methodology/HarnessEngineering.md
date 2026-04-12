@@ -1,6 +1,6 @@
 February 11, 2026
 
-[Engineering](https://openai.com/news/engineering/)
+[Origin-source](https://openai.com/index/harness-engineering/)
 
 # Harness engineering: leveraging Codex in an agent-first world
 
