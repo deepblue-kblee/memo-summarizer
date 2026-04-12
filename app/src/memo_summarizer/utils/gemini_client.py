@@ -41,12 +41,11 @@ class GeminiClient:
     def call_gemini(self, prompt: str) -> Dict[str, Any]:
         """Gemini CLI를 통해 AI API 호출"""
         try:
-            # Gemini 명령어 실행
+            # Gemini 명령어 실행 (올바른 인자: -p, -o json)
             result = subprocess.run([
                 "gemini",
-                "--print",  # 응답 출력하고 종료
-                "--output-format", "json",  # JSON 형식으로 출력
-                prompt
+                "-p", prompt,
+                "-o", "json"
             ],
             capture_output=True,  # stdout/stderr 캡처
             text=True,  # 문자열로 반환
@@ -64,18 +63,26 @@ class GeminiClient:
             except json.JSONDecodeError as e:
                 raise RuntimeError(f"Gemini JSON 응답 파싱 실패: {e}\n응답: {result.stdout[:200]}")
 
-            # 토큰 정보 추출
-            usage_metadata = response_data.get("usage_metadata", {})
-            usage = response_data.get("usage", {})
+            # 토큰 정보 추출 (stats -> models -> [first_model] -> tokens)
+            stats = response_data.get("stats", {})
+            models = stats.get("models", {})
             
-            input_tokens = usage_metadata.get("prompt_token_count", usage.get("prompt_tokens", 0))
-            output_tokens = usage_metadata.get("candidates_token_count", usage.get("output_tokens", 0))
-            total_tokens = usage_metadata.get("total_token_count", usage.get("total_tokens", input_tokens + output_tokens))
+            input_tokens = 0
+            output_tokens = 0
+            total_tokens = 0
+            
+            if models:
+                # 첫 번째 모델의 토큰 정보 사용
+                first_model = list(models.values())[0]
+                tokens = first_model.get("tokens", {})
+                input_tokens = tokens.get("input", 0)
+                output_tokens = tokens.get("candidates", 0)
+                total_tokens = tokens.get("total", input_tokens + output_tokens)
 
             return {
                 "success": True,
-                "content": response_data.get("result", ""),
-                "cost": response_data.get("total_cost_usd", 0),
+                "content": response_data.get("response", ""),
+                "cost": response_data.get("total_cost_usd", 0),  # Gemini CLI는 직접 cost를 안 줄 수도 있음
                 "session_id": response_data.get("session_id", ""),
                 "tokens": {
                     "input": input_tokens,
