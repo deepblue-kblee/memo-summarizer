@@ -64,11 +64,24 @@ class GeminiClient:
             except json.JSONDecodeError as e:
                 raise RuntimeError(f"Gemini JSON 응답 파싱 실패: {e}\n응답: {result.stdout[:200]}")
 
+            # 토큰 정보 추출
+            usage_metadata = response_data.get("usage_metadata", {})
+            usage = response_data.get("usage", {})
+            
+            input_tokens = usage_metadata.get("prompt_token_count", usage.get("prompt_tokens", 0))
+            output_tokens = usage_metadata.get("candidates_token_count", usage.get("output_tokens", 0))
+            total_tokens = usage_metadata.get("total_token_count", usage.get("total_tokens", input_tokens + output_tokens))
+
             return {
                 "success": True,
                 "content": response_data.get("result", ""),
                 "cost": response_data.get("total_cost_usd", 0),
                 "session_id": response_data.get("session_id", ""),
+                "tokens": {
+                    "input": input_tokens,
+                    "output": output_tokens,
+                    "total": total_tokens
+                },
                 "raw": response_data
             }
 

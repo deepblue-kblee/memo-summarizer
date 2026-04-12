@@ -37,7 +37,19 @@ class AgentController:
         self.markdown_processor = MarkdownProcessor()
         self.daily_reporter = DailyReporter(str(self.vault_path))
 
+        # 세션별 총 토큰 사용량 초기화
+        self.total_usage = {"input": 0, "output": 0, "total": 0}
+
         print("✅ 모든 모듈이 초기화되었습니다.")
+
+    def _update_total_usage(self, usage: Dict[str, int]):
+        """분석 결과에서 추출한 토큰 사용량을 세션 합계에 더합니다."""
+        if not usage:
+            return
+            
+        self.total_usage["input"] += usage.get("input", 0)
+        self.total_usage["output"] += usage.get("output", 0)
+        self.total_usage["total"] += usage.get("total", 0)
 
     def process_and_merge(self, file_path: Path, analysis: Dict[str, Any]) -> bool:
         """분석 결과를 PARA 분류에 따라 Projects/Areas 폴더에 병합합니다."""
@@ -133,6 +145,9 @@ class AgentController:
 
             analysis = self.memo_analyzer.analyze_memo(content)
 
+            # 토큰 합계 업데이트
+            self._update_total_usage(analysis.get("usage"))
+
             # 파일 정보 추가
             analysis["filename"] = file_path.name
             analysis["filepath"] = str(file_path)
@@ -178,6 +193,9 @@ class AgentController:
             # 분석 수행
             analysis = self.memo_analyzer.analyze_memo(content)
 
+            # 토큰 합계 업데이트
+            self._update_total_usage(analysis.get("usage"))
+
             # 파일 정보 추가
             analysis["filename"] = file_path.name
             analysis["filepath"] = str(file_path)
@@ -201,6 +219,9 @@ class AgentController:
         print(f"🎉 처리 완료!")
         print(f"   📊 총 {len(results)}개 파일 분석")
         print(f"   ✅ {successful_merges}개 파일 병합 성공")
+        
+        if self.total_usage["total"] > 0:
+            print(f"   📊 세션 총 토큰: 입력 {self.total_usage['input']} / 출력 {self.total_usage['output']} / 총 {self.total_usage['total']}")
 
         return results
 
@@ -229,6 +250,10 @@ class AgentController:
         print(f"📊 PARA 메모 분석 결과")
         print(f"📁 파일: {total_files}개 | 📋 주제: {total_agendas}개 | ✅ 할 일: {total_tasks}개")
         print(f"🎯 Projects: {projects_count}개 | 🏢 Areas: {areas_count}개")
+        
+        if self.total_usage["total"] > 0:
+            print(f"📊 세션 총 토큰: 입력 {self.total_usage['input']} / 출력 {self.total_usage['output']} / 총 {self.total_usage['total']}")
+            
         print(f"{'='*60}")
 
         for i, result in enumerate(results, 1):

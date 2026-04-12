@@ -240,8 +240,18 @@ REQUIRED JSON FORMAT:
                 print(f"💰 {cost_msg}")
                 self._log_to_file(f"INFO - COST: {cost_msg}")
 
+            # 토큰 정보 로그
+            tokens = response.get("tokens")
+            if tokens and tokens.get("total", 0) > 0:
+                token_msg = f"토큰 사용량: 입력 {tokens.get('input', 0)} / 출력 {tokens.get('output', 0)} / 총 {tokens.get('total', 0)}"
+                print(f"📊 {token_msg}")
+                self._log_to_file(f"INFO - TOKENS: {token_msg}")
+
             print("✅ JSON 파싱 및 검증 완료")
             self._log_to_file(f"SUCCESS - PARSING_COMPLETE: {len(result['agendas'])} agendas found")
+            
+            # 결과에 토큰 정보 추가
+            result["usage"] = response.get("tokens")
             return result
 
         except (json.JSONDecodeError, ValueError, TypeError) as e:
@@ -259,7 +269,8 @@ REQUIRED JSON FORMAT:
                     "topic": "파싱 실패",
                     "tasks": [],
                     "summary": f"응답 파싱 중 오류가 발생했습니다: {str(e)}"
-                }]
+                }],
+                "usage": response.get("tokens")
             }
 
         except Exception as unexpected_error:
@@ -274,5 +285,6 @@ REQUIRED JSON FORMAT:
                     "topic": "예기치 못한 오류",
                     "tasks": [],
                     "summary": error_msg
-                }]
+                }],
+                "usage": response.get("tokens")
             }
