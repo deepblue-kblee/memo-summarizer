@@ -8,7 +8,7 @@
 - [`AI_CONTEXT_MANAGEMENT_RESEARCH.md`](AI_CONTEXT_MANAGEMENT_RESEARCH.md) - 종합 조사 보고서 (업계 베스트 프랙티스)
 - [`BEST_PRACTICES.md`](BEST_PRACTICES.md) - 핵심 베스트 프랙티스 요약
 - [`TOOLS_AND_PATTERNS.md`](TOOLS_AND_PATTERNS.md) - 검증된 도구와 패턴 모음
-- [`IMPLEMENTATION_GUIDE.md`](IMPLEMENTATION_GUIDE.md) - 실제 적용 가이드
+- [`README.md`](../../README.md) - 실제 적용 가이드
 
 ### **문서 작성 가이드**
 - [`MARKDOWN_STYLE_GUIDE.md`](MARKDOWN_STYLE_GUIDE.md) - 마크다운 문서 작성 규칙 (이모지 사용 자제)
@@ -22,7 +22,7 @@
 → [`TOOLS_AND_PATTERNS.md#핸드오프-프로토콜`](TOOLS_AND_PATTERNS.md#핸드오프-프로토콜)
 
 ### **문서 구조 최적화**
-→ [`IMPLEMENTATION_GUIDE.md#계층적-문서-구조`](IMPLEMENTATION_GUIDE.md#계층적-문서-구조)
+- [`README.md#메모-처리-파이프라인-구조`](../../README.md#메모-처리-파이프라인-구조)
 
 ### **자동화 스크립트**
 → [`TOOLS_AND_PATTERNS.md#자동화-도구`](TOOLS_AND_PATTERNS.md#자동화-도구)

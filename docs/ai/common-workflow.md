@@ -45,27 +45,27 @@ AI 협업 = 환경에 상관없이 작업 연속성 보장
 ### **📋 상황별 빠른 가이드**
 ```bash
 # 🔴 긴급: "지금 당장 뭘 해야 하지?"
-grep -A 5 "🚨" .ai-docs/PLAN.md && git status
+grep -A 5 "🚨" docs/project/roadmap.md && git status
 
 # 🟡 복귀: "일주일 만에 돌아왔는데..."
-git log --oneline --since="1 week ago" && head -20 .ai-docs/PROGRESS.md
+git log --oneline --since="1 week ago" && head -20 docs/project/progress.md
 
 # 🟢 신규: "이 프로젝트가 뭐지?"
-cat README.md && head -50 .ai-docs/SYSTEM.md
+cat README.md && head -50 docs/architecture/system-overview.md
 ```
 
 ### **🚀 표준 워크플로우**
 ```bash
 # 빠른 복귀 (5분)
-1. PROGRESS.md → 어디까지 완료되었는지
-2. PLAN.md → 다음에 무엇을 해야 하는지
+1. [progress.md](../project/progress.md) → 어디까지 완료되었는지
+2. [roadmap.md](../project/roadmap.md) → 다음에 무엇을 해야 하는지
 3. AI에게 작업 지시 또는 직접 작업
 
 # 전체 이해 (15분)
-1. README.md → 프로젝트 개요
-2. SYSTEM.md → 시스템 아키텍처
-3. PROGRESS.md → 현재 상태
-4. PLAN.md → 다음 작업
+1. [README.md](../../README.md) → 프로젝트 개요
+2. [system-overview.md](../architecture/system-overview.md) → 시스템 아키텍처
+3. [progress.md](../project/progress.md) → 현재 상태
+4. [roadmap.md](../project/roadmap.md) → 다음 작업
 ```
 
 ### **🎯 역할 분담**
@@ -82,19 +82,19 @@ cat README.md && head -50 .ai-docs/SYSTEM.md
 
 ### **🚨 필수 체크리스트 (순서 준수)**
 ```bash
-1. PROGRESS.md 읽기 → 현재 완료 상태 파악
-2. PLAN.md 읽기 → 다음 우선순위 작업 확인
+1. [progress.md](../project/progress.md) 읽기 → 현재 완료 상태 파악
+2. [roadmap.md](../project/roadmap.md) 읽기 → 다음 우선순위 작업 확인
 3. Git 상태 확인 → git status && git log --oneline -3
-4. 진행 중 작업 확인 → grep "🚧" .ai-docs/PLAN.md
+4. 진행 중 작업 확인 → grep "🚧" docs/project/roadmap.md
 ```
 
 ### **⚡ 빠른 상태 파악 명령어**
 ```bash
 # 현재 우선순위 작업
-grep -A 10 "Priority" .ai-docs/PLAN.md
+grep -A 10 "Priority" docs/project/roadmap.md
 
 # 완료된 작업 (중복 방지)
-grep -A 10 "✅ 완료된 작업" .ai-docs/PROGRESS.md
+grep -A 10 "✅ 완료된 작업" docs/project/progress.md
 
 # Git 상태 요약
 git log --oneline -3 && git status --short
@@ -106,7 +106,7 @@ AI 환경 가이드 (CLAUDE.md/GEMINI.md) 읽기
     ↓
 이 공통 지침 읽기 (대전제 + 워크플로우)
     ↓
-PROGRESS.md → PLAN.md → SYSTEM.md(필요시)
+[progress.md](../project/progress.md) → [roadmap.md](../project/roadmap.md) → [README.md](../../README.md)(필요시)
     ↓
 우선순위 작업 파악 → Git 상태 확인
     ↓
@@ -124,15 +124,15 @@ PROGRESS.md → PLAN.md → SYSTEM.md(필요시)
 ## 📚 **Multi-AI 환경 가이드**
 
 ### **🎯 파일 역할 (CLAUDE.md/GEMINI.md)**
-- **목적**: 각 환경에서 AI_COMMON_INSTRUCTIONS.md로 빠른 연결
+- **목적**: 각 환경에서 [AGENTS.md](../../AGENTS.md)로 빠른 연결
 - **내용**: 환경별 최소 설정만, 공통 워크플로우는 이 파일 참조
 - **원칙**: AI가 무엇이든 **동일한 개발 작업** 수행
 
 ### **🔄 참조 순서**
 ```bash
 1. 환경별 가이드: Claude환경→CLAUDE.md, Gemini환경→GEMINI.md
-2. 공통 지침: 모든 환경 → AI_COMMON_INSTRUCTIONS.md
-3. 작업 상태: PROGRESS.md → PLAN.md → SYSTEM.md(필요시)
+2. 공통 지침: 모든 환경 → [AGENTS.md](../../AGENTS.md)
+3. 작업 상태: [progress.md](../project/progress.md) → [roadmap.md](../project/roadmap.md) → [README.md](../../README.md)(필요시)
 ```
 
 ### **🚨 Multi-AI 일관성 규칙**
@@ -144,17 +144,17 @@ PROGRESS.md → PLAN.md → SYSTEM.md(필요시)
 ## 🚨 **중요 제약사항**
 
 ### **우선순위 준수**
-> **📋 최신 우선순위**: [PLAN.md](PLAN.md) 확인
-- **중복 방지**: PROGRESS.md에서 완료된 작업 확인
+> **📋 최신 우선순위**: [roadmap.md](../project/roadmap.md) 확인
+- **중복 방지**: [progress.md](../project/progress.md)에서 완료된 작업 확인
 - **Git 관리**: 의미있는 단위로 커밋, 백업 후 변경
 
 ### **Reference 활용**
 ```bash
 # Reference 디렉토리 확인
-ls .ai-docs/reference/
+ls docs/reference/
 
 # 키워드 검색
-grep -l "키워드" .ai-docs/reference/*.md
+grep -l "키워드" docs/reference/*.md
 ```
 - ✅ **제안시 활용**: 기존 연구결과 인용
 - ❌ **금지**: 방향설정, 재조사
@@ -166,10 +166,10 @@ grep -l "키워드" .ai-docs/reference/*.md
 ### **스마트 문서 정리**
 ```bash
 # Git 기반 변경 추적 (필요시만 실행)
-changes=$(git log --oneline --since="$(cat .ai-docs/.last_cleanup 2>/dev/null || echo '1 week ago')" .ai-docs/ | wc -l)
+changes=$(git log --oneline --since="$(cat docs/project/.last_cleanup 2>/dev/null || echo '1 week ago')" docs/project/ | wc -l)
 ```
 
-**트리거 조건**: 1주일간 10회 이상 .ai-docs 수정 시 → 사용자 승인 후 정리
+**트리거 조건**: 1주일간 10회 이상 docs/project 수정 시 → 사용자 승인 후 정리
 **효과**: 토큰 사용량 80% 감소, 사용자 피로 대폭 개선
 
 ---

@@ -97,14 +97,13 @@ gemini --version
 ```
 
 ### **🤖 AI 세션 시작 시 문서 읽기 순서**
-1. **PROGRESS.md** - 현재까지 완료된 작업 파악
-2. **PLAN.md** (이 파일) - 다음 할 작업 확인
-3. **SYSTEM.md** - 시스템 아키텍처 (필요시)
+1. **[progress.md](progress.md)** - 현재까지 완료된 작업 파악
+2. **[roadmap.md](roadmap.md)** (이 파일) - 다음 할 작업 확인
+3. **[README.md](../../README.md)** - 시스템 아키텍처 (필요시)
 
 ### **👤 사람 프로젝트 참여 시 문서 읽기 순서**
-1. **README.md** - 프로젝트 개요 이해
-2. **SYSTEM.md** - 시스템 아키텍처 이해
-3. **CLAUDE.md / GEMINI.md** - 선택한 AI별 상세 가이드
+1. **[README.md](../../README.md)** - 프로젝트 개요 및 아키텍처 이해
+2. **[CLAUDE.md](../../CLAUDE.md) / [GEMINI.md](../../GEMINI.md)** - 선택한 AI별 상세 가이드
 
 ### **✅ 완료된 최우선 작업 (Priority 4)**
 
@@ -130,7 +129,7 @@ gemini --version
 
 ## ⚡ **빠른 상태 파악**
 
-> **⚡ 상태 확인 명령어**: [AI_COMMON_INSTRUCTIONS.md](AI_COMMON_INSTRUCTIONS.md#빠른-상태-파악-명령어)에서 확인
+> **⚡ 상태 확인 명령어**: [AGENTS.md](../../AGENTS.md#핵심-명령어)에서 확인
 
 ## 🎯 **성과 목표**
 

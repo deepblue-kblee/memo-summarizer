@@ -137,8 +137,8 @@ echo "## 이전 기록: [archive/PROGRESS_${date_str}.md]" >> PROGRESS.md
 - 2026-01: PARA 분류 시스템 구축
 
 ## 🔗 상세 기록
-- [3월 상세 기록](archive/PROGRESS_2026-03.md)
-- [2월 상세 기록](archive/PROGRESS_2026-02.md)
+- 3월 상세 기록 (아카이브 예정)
+- 2월 상세 기록 (아카이브 예정)
 ```
 
 ### 3.2 AI-Friendly 컨텍스트 구조화
@@ -300,9 +300,9 @@ fi
 git status && grep -A 5 "Priority 1" .ai-docs/PLAN.md
 
 ## 🔗 상세 정보 (링크만)
-[전체 진행상황 → PROGRESS.md](PROGRESS.md)
-[다음 계획 → PLAN.md](PLAN.md)
-[시스템 구조 → SYSTEM.md](SYSTEM.md)
+[전체 진행상황 → progress.md](../project/progress.md)
+[다음 계획 → roadmap.md](../project/roadmap.md)
+[시스템 구조 → README.md](../../README.md)
 ```
 
 #### B) PROGRESS.md 압축 (Priority 1)
@@ -416,7 +416,7 @@ done
 ### **관련 문서**
 - [Best Practices](BEST_PRACTICES.md) - 핵심 베스트 프랙티스 요약
 - [Tools and Patterns](TOOLS_AND_PATTERNS.md) - 검증된 도구와 스크립트
-- [Implementation Guide](IMPLEMENTATION_GUIDE.md) - 실제 적용 가이드
+- [README.md](../../README.md) - 실제 적용 가이드
 
 ---
 

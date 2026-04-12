@@ -314,7 +314,7 @@ After (PARA 자동 분류):
 
 ### 소스 추적성
 각 아젠다 파일에는 원본 메모 추적을 위한 이력 섹션이 포함됩니다.
-상세 포맷은 [SYSTEM.md](.ai-docs/SYSTEM.md) 참조.
+상세 포맷은 [README.md](README.md) 참조.
 
 ## 📊 메모 처리 과정 실시간 확인
 

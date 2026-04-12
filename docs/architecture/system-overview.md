@@ -560,5 +560,5 @@ def analyze_and_merge_files(
 ---
 
 > 📚 **For AI-Specific Information**:
-> - **Claude users**: See [CLAUDE.md](CLAUDE.md)
-> - **Gemini users**: See [GEMINI.md](GEMINI.md)
+> - **Claude users**: See [../../CLAUDE.md](../../CLAUDE.md)
+> - **Gemini users**: See [../../GEMINI.md](../../GEMINI.md)
