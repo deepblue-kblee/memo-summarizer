@@ -60,16 +60,17 @@ class MarkdownProcessor:
         return sections
 
     def extract_existing_tasks(self, sections: Dict) -> List[str]:
-        """기존 할 일 목록을 추출합니다."""
+        """기존 할 일 목록을 추출합니다. (체크박스 포함 유지)"""
         existing_tasks = []
 
         for line in sections["tasks"]["content"]:
             line = line.strip()
-            # - 또는 * 로 시작하는 항목들 추출
-            if line.startswith('- ') or line.startswith('* '):
-                task = line[2:].strip()
-                if task:
-                    existing_tasks.append(task)
+            # - [ ] 또는 - [x] 로 시작하는 항목들 추출
+            if line.startswith('- [ ]') or line.startswith('- [x]'):
+                existing_tasks.append(line)
+            # 일반 리스트 항목도 일단 포함
+            elif line.startswith('- ') or line.startswith('* '):
+                existing_tasks.append(line)
 
         return existing_tasks
 
@@ -85,7 +86,10 @@ class MarkdownProcessor:
 
         # 할 일 추가
         for task in tasks:
-            content += f"- {task}\n"
+            if task.startswith('- ') or task.startswith('* '):
+                content += f"{task}\n"
+            else:
+                content += f"- {task}\n"
 
         content += f"""
 ## 📝 메모 이력
@@ -96,66 +100,82 @@ class MarkdownProcessor:
         return content
 
     def merge_with_existing_content(self, existing_content: str, topic: str, new_tasks: List[str], summary: str) -> str:
-        """기존 파일 내용과 새 내용을 병합합니다."""
+        """기존 파일 내용과 새 내용을 병합합니다 (레거시/백업용)."""
         if not existing_content:
-            # 파일이 비어있으면 새로 생성
             return self.create_new_agenda_file_content(topic, new_tasks, summary)
 
-        # 섹션 파싱
         sections = self.parse_markdown_sections(existing_content)
-
-        # 기존 할 일 목록 추출
         existing_tasks = self.extract_existing_tasks(sections)
 
-        # 중복되지 않은 새 할 일만 필터링
         unique_new_tasks = []
         for task in new_tasks:
-            if task not in existing_tasks:
+            found = False
+            for existing in existing_tasks:
+                if task in existing:
+                    found = True
+                    break
+            if not found:
                 unique_new_tasks.append(task)
 
-        # 새 내용으로 파일 재구성
         lines = existing_content.split('\n')
         new_lines = []
-
         today = datetime.now().strftime("%Y-%m-%d")
 
-        # 할 일 섹션에 새 항목 추가
         tasks_section = sections["tasks"]
         if tasks_section["start_line"] >= 0:
-            # 기존 할 일 섹션이 있는 경우
             new_lines = lines[:tasks_section["end_line"] + 1]
-
-            # 새 할 일 추가
             for task in unique_new_tasks:
-                new_lines.append(f"- {task}")
-
-            # 나머지 내용 추가
+                if task.startswith('- ') or task.startswith('* '):
+                    new_lines.append(f"{task}")
+                else:
+                    new_lines.append(f"- {task}")
             if tasks_section["end_line"] + 1 < len(lines):
                 new_lines.extend(lines[tasks_section["end_line"] + 1:])
         else:
-            # 할 일 섹션이 없는 경우 - 파일 끝에 추가
             new_lines = lines
             new_lines.append("")
             new_lines.append("## 🚀 할 일 목록")
             new_lines.append("")
             for task in unique_new_tasks:
-                new_lines.append(f"- {task}")
+                if task.startswith('- ') or task.startswith('* '):
+                    new_lines.append(f"{task}")
+                else:
+                    new_lines.append(f"- {task}")
 
-        # 메모 이력 섹션에 새 요약 추가
-        history_section = sections["history"]
+        # 이력 추가 (이미 history 섹션이 있는 경우 고려)
+        history_section = self.parse_markdown_sections('\n'.join(new_lines))["history"]
         if history_section["start_line"] >= 0:
-            # 기존 이력 섹션이 있는 경우 - 섹션 바로 다음에 추가
+            current_lines = '\n'.join(new_lines).split('\n')
             insert_pos = history_section["start_line"] + 1
-            # 빈 줄이 있으면 그 다음에 삽입
-            while insert_pos < len(new_lines) and new_lines[insert_pos].strip() == "":
+            while insert_pos < len(current_lines) and current_lines[insert_pos].strip() == "":
                 insert_pos += 1
-
-            new_lines.insert(insert_pos, f"[{today}] {summary}")
+            current_lines.insert(insert_pos, f"[{today}] {summary}")
+            return '\n'.join(current_lines)
         else:
-            # 이력 섹션이 없는 경우 - 파일 끝에 추가
             new_lines.append("")
             new_lines.append("## 📝 메모 이력")
             new_lines.append("")
             new_lines.append(f"[{today}] {summary}")
+            return '\n'.join(new_lines)
 
-        return '\n'.join(new_lines)
+    def get_task_counts(self, content: str) -> Dict[str, int]:
+        """할 일 목록에서 완료/미완료 개수를 세어 반환합니다."""
+        sections = self.parse_markdown_sections(content)
+        tasks = sections["tasks"]["content"]
+        
+        counts = {"total": 0, "pending": 0, "completed": 0}
+        
+        for line in tasks:
+            line = line.strip()
+            if line.startswith('- [ ]'):
+                counts["pending"] += 1
+                counts["total"] += 1
+            elif line.startswith('- [x]'):
+                counts["completed"] += 1
+                counts["total"] += 1
+            elif line.startswith('- ') or line.startswith('* '):
+                # 일반 리스트 항목은 미완료로 취급
+                counts["pending"] += 1
+                counts["total"] += 1
+                
+        return counts

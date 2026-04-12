@@ -80,11 +80,22 @@ class AgentController:
 
                 # 파일 존재 여부에 따라 처리
                 if agenda_file_path.exists():
-                    print(f"🔄 기존 파일과 병합 중...")
+                    print(f"🔄 기존 파일과 병합 중 (AI 상태 병합)...")
                     existing_content = self.file_manager.read_file_content(agenda_file_path)
-                    merged_content = self.markdown_processor.merge_with_existing_content(
-                        existing_content, topic, tasks, summary
+                    
+                    # 새 정보 요약 (tasks + summary)
+                    new_info = f"요약: {summary}\n할 일:\n" + "\n".join(tasks)
+                    
+                    merged_content = self.memo_analyzer.update_agenda_with_state(
+                        existing_content, topic, new_info, category
                     )
+                    
+                    # AI 병합 실패 시 기존 방식으로 백업
+                    if not merged_content:
+                        print("⚠️ AI 병합 실패, 기존 텍스트 병합 방식으로 전환합니다.")
+                        merged_content = self.markdown_processor.merge_with_existing_content(
+                            existing_content, topic, tasks, summary
+                        )
                 else:
                     print(f"📄 새 파일 생성 중...")
                     merged_content = self.markdown_processor.create_new_agenda_file_content(

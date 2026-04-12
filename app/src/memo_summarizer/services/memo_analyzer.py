@@ -8,7 +8,7 @@ import json
 import re
 import os
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, Any, List
 from pathlib import Path
 from memo_summarizer.utils.claude_client import ClaudeClient
 from memo_summarizer.utils.gemini_client import GeminiClient
@@ -121,13 +121,13 @@ REQUIRED JSON FORMAT:
         {{
             "topic": "주제1",
             "category": "Projects",
-            "tasks": ["할일1", "할일2"],
+            "tasks": ["- [ ] 할일1", "- [ ] 할일2"],
             "summary": "주제1의 핵심 내용 요약"
         }},
         {{
             "topic": "주제2",
             "category": "Areas",
-            "tasks": ["할일3"],
+            "tasks": ["- [ ] 할일3"],
             "summary": "주제2의 핵심 내용 요약"
         }}
     ]
@@ -147,6 +147,8 @@ REQUIRED JSON FORMAT:
 3. topic은 파일명으로 사용 가능한 간결한 형태로 작성 (예: "믹스패널", "조직개편", "프로젝트A")
 4. category는 위 PARA 기준에 따라 "Projects" 또는 "Areas"로 분류 (불확실하면 "Areas")
 5. tasks는 해당 주제에서 추출할 수 있는 구체적인 행동 항목들 (없으면 빈 배열 [])
+   * **중요: 모든 할 일은 반드시 `- [ ] `로 시작하는 마크다운 체크박스 형식으로 작성하세요.**
+   * 만약 메모 내용상 이미 완료된 것으로 판단되는 할 일이 있다면 `- [x] `를 사용하세요.
 6. summary는 해당 주제의 핵심 내용을 2-3 문장으로 요약
 7. 주제가 없으면 agendas를 빈 배열 []로 설정
 
@@ -272,7 +274,6 @@ REQUIRED JSON FORMAT:
                 }],
                 "usage": response.get("tokens")
             }
-
         except Exception as unexpected_error:
             error_msg = f"예기치 못한 오류: {str(unexpected_error)}"
             print(f"❌ {error_msg}")
@@ -288,3 +289,57 @@ REQUIRED JSON FORMAT:
                 }],
                 "usage": response.get("tokens")
             }
+
+    def update_agenda_with_state(self, existing_content: str, topic: str, new_memo_segment: str, category: str) -> str:
+        """기존 아젠다 파일 내용과 새 메모 내용을 AI를 사용하여 지능적으로 병합합니다."""
+        
+        today = datetime.now().strftime("%Y-%m-%d")
+        
+        prompt = f"""
+당신은 PARA 방법론에 기반한 지식 관리 에이전트입니다. 
+기존의 '{topic}' ({category}) 문서에 새로운 메모 내용을 반영하여 문서를 최신 상태로 업데이트하세요.
+
+### 기존 문서 내용:
+\"\"\"
+{existing_content}
+\"\"\"
+
+### 새로운 메모 내용:
+\"\"\"
+{new_memo_segment}
+\"\"\"
+
+### 업데이트 규칙:
+1. **🚀 할 일 목록 업데이트**:
+   - 새 메모를 바탕으로 기존 할 일 중 완료된 것이 있다면 `- [ ]`를 `- [x]`로 변경하세요.
+   - 새롭게 발견된 할 일이 있다면 `- [ ]`로 추가하세요.
+   - 중복된 할 일은 하나로 합치거나 제외하세요.
+2. **📝 메모 이력 추가**:
+   - 오늘 날짜([{today}])로 새 메모의 핵심 내용을 1-2문장으로 요약하여 이력의 **가장 상단**에 추가하세요.
+   - 기존의 이력들은 그대로 유지하되, 오늘 내용을 최상단에 배치하세요.
+3. **포맷 유지**:
+   - 문서의 전체적인 구조(제목, 섹션 구분 등)를 그대로 유지하세요.
+   - 결과물은 마크다운 형식의 **전체 문서 내용**이어야 합니다.
+
+**CRITICAL: OUTPUT ONLY THE FULL UPDATED MARKDOWN CONTENT. NO EXPLANATIONS.**
+"""
+
+        try:
+            print(f"🔄 AI를 사용하여 '{topic}' 상태 업데이트 중...")
+            response = self.ai_client.call_claude_code(prompt)
+            
+            if response["success"]:
+                updated_content = response["content"].strip()
+                # 가끔 AI가 코드 블록으로 감싸는 경우 제거
+                if updated_content.startswith("```markdown"):
+                    updated_content = updated_content[11:-3].strip()
+                elif updated_content.startswith("```"):
+                    updated_content = updated_content[3:-3].strip()
+                
+                return updated_content
+            else:
+                print(f"⚠️ AI 병합 실패, 기존 방식으로 전환: {response['error']}")
+                return ""
+        except Exception as e:
+            print(f"❌ AI 병합 중 예외 발생: {e}")
+            return ""

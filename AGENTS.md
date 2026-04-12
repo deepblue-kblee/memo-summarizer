@@ -56,4 +56,12 @@ source app/venv/bin/activate && memo-processor /vault --ai auto
 ---
 
 *Agent-first development powered by OpenAI Harness Engineering*
-*Last updated: 2026-04-06 | Next milestone: Phase 2 (린터 구현)*
+
+## 🛠️ 핵심 방법론 및 전략
+
+이 프로젝트는 **Harness Engineering**과 **GSD(Get Shit Done)** 철학을 결합하여 운영됩니다.
+
+- **[HarnessEngineering.md](docs/methodology/HarnessEngineering.md)**: 에이전트 전용 환경 설계 원칙
+- **[memo-summarizer-strategy.md](docs/methodology/memo-summarizer-strategy.md)**: 메모 요약 시스템의 핵심 요구사항 및 로드맵 (**반드시 필독**)
+
+*Last updated: 2026-04-12 | Next milestone: Phase 2 (가독성 및 비용 최적화)*

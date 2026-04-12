@@ -7,6 +7,7 @@
 from typing import List, Dict, Any
 from datetime import datetime
 from pathlib import Path
+from memo_summarizer.utils.markdown_processor import MarkdownProcessor
 
 
 class DailyReporter:
@@ -19,6 +20,7 @@ class DailyReporter:
         """
         self.vault_path = Path(vault_path).resolve()
         self.daily_reports_path = self.vault_path / "02_DAILY_REPORTS"
+        self.markdown_processor = MarkdownProcessor()
 
         # 디렉토리 생성
         self.daily_reports_path.mkdir(exist_ok=True)
@@ -36,14 +38,25 @@ class DailyReporter:
             areas = []
 
             for agenda in processed_agendas:
-                if agenda.get("topic") and agenda["topic"] not in ["분석 실패", "파싱 실패", "예기치 못한 오류"]:
+                topic = agenda.get("topic")
+                category = agenda.get("category", "Areas")
+                
+                if topic and topic not in ["분석 실패", "파싱 실패", "예기치 못한 오류"]:
+                    # 실제 파일에서 최신 상태 읽기
+                    agenda_file_path = self.vault_path / "01_AGENDAS" / category / f"{topic}.md"
+                    
+                    task_counts = {"total": 0, "pending": 0, "completed": 0}
+                    if agenda_file_path.exists():
+                        with open(agenda_file_path, 'r', encoding='utf-8') as f:
+                            content = f.read()
+                            task_counts = self.markdown_processor.get_task_counts(content)
+                    
                     topic_info = {
-                        "topic": agenda["topic"],
+                        "topic": topic,
                         "summary": agenda["summary"],
-                        "task_count": len(agenda.get("tasks", []))
+                        "task_counts": task_counts
                     }
 
-                    category = agenda.get("category", "Areas")
                     if category == "Projects":
                         projects.append(topic_info)
                     else:
@@ -58,8 +71,7 @@ class DailyReporter:
 
             # 파일 저장 (일일 단위 덮어쓰기)
             if self._write_file(daily_file_path, content):
-                print(f"📊 데일리 리포트 생성: Daily_Report_{today}.md")
-                print(f"   🎯 Projects: {len(projects)}개 | 🏢 Areas: {len(areas)}개")
+                print(f"📊 데일리 리포트 생성 완료: Daily_Report_{today}.md")
                 return True
             else:
                 return False
@@ -69,10 +81,10 @@ class DailyReporter:
             return False
 
     def _generate_daily_report_content(self, projects: List[Dict], areas: List[Dict], today: str) -> str:
-        """Projects/Areas 분류가 적용된 데일리 리포트 내용을 생성합니다."""
+        """최종 상태(State)가 반영된 데일리 리포트 내용을 생성합니다."""
         content = f"""# Daily Report - {today}
 
-> 📊 **메모 자동화 일일 처리 보고서**
+> 📊 **메모 자동화 일일 처리 보고서 (PARA State Report)**
 
 ## 🎯 Projects (목표 지향 프로젝트)
 
@@ -82,13 +94,13 @@ class DailyReporter:
             for i, project in enumerate(projects, 1):
                 topic = project["topic"]
                 summary = project["summary"]
-                task_count = project["task_count"]
+                counts = project["task_counts"]
 
-                content += f"### {i}. [[Projects/{topic}]]\n"
-                content += f"- **할 일**: {task_count}개\n"
-                content += f"- **요약**: {summary}\n\n"
+                content += f"### {i}. [[Projects/{topic}|{topic}]]\n"
+                content += f"- **오늘의 진척**: {summary}\n"
+                content += f"- **할 일 상태**: 총 {counts['total']}개 (남음: {counts['pending']}, 완료: {counts['completed']})\n\n"
         else:
-            content += "*오늘 처리된 프로젝트가 없습니다.*\n\n"
+            content += "*오늘 업데이트된 프로젝트가 없습니다.*\n\n"
 
         content += """## 🏢 Areas (지속적 관리 영역)
 
@@ -98,36 +110,47 @@ class DailyReporter:
             for i, area in enumerate(areas, 1):
                 topic = area["topic"]
                 summary = area["summary"]
-                task_count = area["task_count"]
+                counts = area["task_counts"]
 
-                content += f"### {i}. [[Areas/{topic}]]\n"
-                content += f"- **할 일**: {task_count}개\n"
-                content += f"- **요약**: {summary}\n\n"
+                content += f"### {i}. [[Areas/{topic}|{topic}]]\n"
+                content += f"- **오늘의 요약**: {summary}\n"
+                content += f"- **할 일 상태**: 총 {counts['total']}개 (남음: {counts['pending']}, 완료: {counts['completed']})\n\n"
         else:
-            content += "*오늘 처리된 관리 영역이 없습니다.*\n\n"
+            content += "*오늘 업데이트된 관리 영역이 없습니다.*\n\n"
 
         # PARA 통계 섹션
-        total_topics = len(projects) + len(areas)
-        total_tasks = sum(p['task_count'] for p in projects) + sum(a['task_count'] for a in areas)
+        total_projects_tasks = sum(p['task_counts']['total'] for p in projects)
+        pending_projects_tasks = sum(p['task_counts']['pending'] for p in projects)
+        completed_projects_tasks = sum(p['task_counts']['completed'] for p in projects)
+        
+        total_areas_tasks = sum(a['task_counts']['total'] for a in areas)
+        pending_areas_tasks = sum(a['task_counts']['pending'] for a in areas)
+        completed_areas_tasks = sum(a['task_counts']['completed'] for a in areas)
 
-        content += f"""## 📈 PARA 처리 통계
+        content += f"""## 📈 PARA 종합 통계 (오늘 업데이트 항목 기준)
 
-| 분류 | 주제 수 | 할 일 수 |
-|------|---------|----------|
-| 🎯 Projects | {len(projects)}개 | {sum(p['task_count'] for p in projects)}개 |
-| 🏢 Areas | {len(areas)}개 | {sum(a['task_count'] for a in areas)}개 |
-| **합계** | **{total_topics}개** | **{total_tasks}개** |
+| 분류 | 주제 수 | 전체 할 일 | 남은 일 | 완료된 일 | 진척도 |
+|------|---------|------------|---------|-----------|--------|
+| 🎯 Projects | {len(projects)}개 | {total_projects_tasks}개 | {pending_projects_tasks}개 | {completed_projects_tasks}개 | {self._calc_percent(completed_projects_tasks, total_projects_tasks)}% |
+| 🏢 Areas | {len(areas)}개 | {total_areas_tasks}개 | {pending_areas_tasks}개 | {completed_areas_tasks}개 | {self._calc_percent(completed_areas_tasks, total_areas_tasks)}% |
+| **합계** | **{len(projects) + len(areas)}개** | **{total_projects_tasks + total_areas_tasks}개** | **{pending_projects_tasks + pending_areas_tasks}개** | **{completed_projects_tasks + completed_areas_tasks}개** | **{self._calc_percent(completed_projects_tasks + completed_areas_tasks, total_projects_tasks + total_areas_tasks)}%** |
 
 ## 📝 메타데이터
 
 - **생성 시각**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 - **PARA 방법론**: Projects (목표) + Areas (책임)
-- **자동 생성**: PARA 메모 자동화 에이전트
+- **상태 관리**: AI 기반 지능형 병합 및 상태 추적 적용
 
 ---
-*이 보고서는 PARA 방법론을 적용하여 자동 생성되었습니다.*
+*이 보고서는 PARA 방법론과 GSD 철학을 결합하여 자동 생성되었습니다.*
 """
         return content
+
+    def _calc_percent(self, completed: int, total: int) -> int:
+        """진척도 백분율을 계산합니다."""
+        if total == 0:
+            return 0
+        return int((completed / total) * 100)
 
     def _write_file(self, file_path: Path, content: str) -> bool:
         """파일에 내용을 씁니다."""
