@@ -31,6 +31,7 @@
 
 - **[roadmap.md](docs/project/roadmap.md)**: 현재 진행 단계 및 다음 할 일 (**작업 시작 전 필수 확인**)
 - **[progress.md](docs/project/progress.md)**: 지금까지 완료된 구체적 작업 내역
+- **[HALLUCINATION_MINIMIZATION.md](docs/reference/HALLUCINATION_MINIMIZATION.md)**: 할루시네이션 최소화 지침 (**필수 준수**)
 - **[strategy.md](docs/methodology/memo-summarizer-strategy.md)**: PARA 시스템 설계 원칙 및 전략
 - **[STANDARDS.md](docs/reference/STANDARDS.md)**: 마크다운 스타일 및 개발 표준 가이드
 
