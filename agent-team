@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""
+Agent Team CLI 진입점
+
+범용 LangGraph 에이전트 개발팀의 명령줄 인터페이스
+"""
+
+import sys
+import os
+
+# 스크립트 경로를 Python 경로에 추가
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, script_dir)
+
+# Agent Team CLI 실행
+if __name__ == "__main__":
+    try:
+        from agent_team.harness.cli import cli
+        cli()
+    except ImportError as e:
+        print(f"❌ Agent Team 모듈을 가져올 수 없습니다: {e}")
+        print("💡 다음을 확인해주세요:")
+        print("   1. requirements.txt의 의존성이 설치되었는지")
+        print("   2. 현재 디렉토리가 프로젝트 루트인지")
+        print("   3. Python 경로 설정이 올바른지")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Agent Team 실행 중 오류 발생: {e}")
+        sys.exit(1)
